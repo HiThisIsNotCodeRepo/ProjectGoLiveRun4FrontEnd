@@ -9,8 +9,8 @@ import { categories as categoriesData, tasks as tasksData, taskSteps as taskStep
 export class AcademyMockApi
 {
     private _categories: any[] = categoriesData;
-    private _courses: any[] = tasksData;
-    private _demoCourseSteps: any[] = taskStepsData;
+    private _tasks: any[] = tasksData;
+    private _taskSteps: any[] = taskStepsData;
 
     /**
      * Constructor
@@ -54,7 +54,7 @@ export class AcademyMockApi
             .reply(() => {
 
                 // Clone the courses
-                const courses = cloneDeep(this._courses);
+                const courses = cloneDeep(this._tasks);
 
                 return [200, courses];
             });
@@ -70,8 +70,8 @@ export class AcademyMockApi
                 const id = request.params.get('id');
 
                 // Clone the courses and steps
-                const courses = cloneDeep(this._courses);
-                const steps = cloneDeep(this._demoCourseSteps);
+                const courses = cloneDeep(this._tasks);
+                const steps = cloneDeep(this._taskSteps);
 
                 // Find the course and attach steps to it
                 const course = courses.find(item => item.id === id);

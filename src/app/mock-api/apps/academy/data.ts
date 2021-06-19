@@ -653,17 +653,23 @@ export const taskSteps = [
     {
         order: 0,
         title: 'Task Issued',
-        subtitle: 'Introducing the library and how it works',
+        subtitle: 'The task has just issued by task owner now is receiving bidding',
         content: `<h2 class="text-2xl sm:text-3xl">Introduction</h1>${demoCourseContent}`
     },
     {
         order: 1,
-        title: 'Task Assigned',
-        subtitle: 'Where to find the sample code and how to access it',
+        title: 'Task Bidding',
+        subtitle: 'The task now is receiving bidding',
         content: `<h2 class="text-2xl sm:text-3xl">Get the sample code</h1>${demoCourseContent}`
     },
     {
         order: 2,
+        title: 'Task Bidding Result',
+        subtitle: 'Task bidding result is pending',
+        content: `<h2 class="text-2xl sm:text-3xl">Create a Firebase project and Set up your app</h1> ${demoCourseContent}`
+    },
+    {
+        order: 3,
         title: 'Task Completed',
         subtitle: 'How to create a basic Firebase project and how to run it locally',
         content: `<h2 class="text-2xl sm:text-3xl">Create a Firebase project and Set up your app</h1> ${demoCourseContent}`
