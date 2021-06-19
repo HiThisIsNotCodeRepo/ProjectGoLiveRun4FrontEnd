@@ -118,24 +118,23 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                 // set filtercourse size before paginator
                 this.b4PaginatorFilterCourseSize = this.filteredCourses.length;
                 if (this.paginatorObj !== undefined) {
+                    let flag = false;
                     if (this.initComplete !== hideCompleted) {
+                        flag = true;
                         this.paginatorObj.firstPage();
-                        this.paginatorObj.pageSize = paginator.pageSize;
                         this.initComplete = hideCompleted;
-                        this.filteredCourses = this.filteredCourses.slice(0, paginator.pageSize);
-                        return;
                     }
-                    if (this.initCategory !== categorySlug) {
-                        this.paginatorObj.firstPage();
-                        this.paginatorObj.pageSize = paginator.pageSize;
+                    if (this.initCategory !== categorySlug && !flag) {
+                        flag = true;
                         this.initCategory = categorySlug;
-                        this.filteredCourses = this.filteredCourses.slice(0, paginator.pageSize);
-                        return;
                     }
-                    if (this.initQuery !== query) {
+                    if (this.initQuery !== query && !flag) {
+                        flag = true;
+                        this.initQuery = query;
+                    }
+                    if (flag) {
                         this.paginatorObj.firstPage();
                         this.paginatorObj.pageSize = paginator.pageSize;
-                        this.initQuery = query;
                         this.filteredCourses = this.filteredCourses.slice(0, paginator.pageSize);
                         return;
                     }
@@ -198,6 +197,7 @@ export class AcademyListComponent implements OnInit, OnDestroy {
     // pagination set-up
 
     handlePageEvent(event: PageEvent): void {
+        this.pageSize = event.pageSize;
         this.paginator.pageSize = event.pageSize;
         this.paginator.pageIndex = event.pageIndex;
         this.filters.paginator$.next(this.paginator);
