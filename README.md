@@ -1,27 +1,93 @@
-# ProjectGoLiveRun4FrontEnd
+# Go School Project Go Live Run 4
+## Project Title: Pao Tui(跑腿)
+**Front End Interface**
+>Author: Qin Chenfeng
+>
+> Email:freddy.qin@gmail.com
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.13.
+## Project Description
+Due to Covid 19, an ad hoc job posting platform has emerged to provide more job opportunities, anyone can post their urgent task with personalised requirements ,for instance deliver food, buy necessity, send documents etc, it also needs to include max acceptable rate and expected delivery time. Anyone who is interested in making pocket money can bid for the job with their minimum acceptable rate and finish time. Among those service providers, job posters should pick one. Once a job is assigned, the service provider should do their best to complete the task before the deadline to avoid any penalty.
 
-## Development server
+## Front Ende Template Selection
+To expediate front end developement, I have choosen a [template](https://themeforest.net/item/fuse-angularjs-material-design-admin-template/12931855?gclid=CjwKCAjwq7aGBhADEiwA6uGZpx14Dv86Apxo_47dPNLqdKC3U5N7gDGr9eBmZ-sn1-lpdgRpDAkTvhoCTmUQAvD_BwE) which provide UI structure layout and material components. So I can more focus on the logic development.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Core Feature I Expected To Accomplish In Front End
+1. User registeration page.
+    - Use the template page in the UI template.
+3. User login.
+    - Use the template page in the UI template.
+3. Search task page.
+    - The original template page in the UI template isn't good enough, for example it lacks of pagination control
+4. Task inseration page.
 
-## Code scaffolding
+## Update on 2021/6/19
+![](https://i.imgur.com/QkWLSZt.gif)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### How to make paginator work
+The paginator feature is with `<mat-paginator>`tag,you can find the reference [here](https://material.angular.io/components/paginator/overview).
+It has a few propertis to suit your need. Here I use `length`,`pageSize`,`pageSizeOptions`, and event `page`.
+```
+<mat-paginator
+    #paginatorObj
+    [length]="b4PaginatorFilterCourseSize"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="handlePageEvent($event)">
+    >
+</mat-paginator>
+```
+As we can see, the search page already has some input form. 
+![](https://i.imgur.com/eyB3nnh.png)
+That means every time when we set new value or update value the list needs to be updated. This can be achieved by RxJs operators `combineLatest`.
+```
+        combineLatest([this.filters.categorySlug$, this.filters.query$, this.filters.hideCompleted$, this.filters.paginator$])
+            .subscribe(([categorySlug, query, hideCompleted, paginator]) => {
 
-## Build
+                // Reset the filtered courses
+                this.filteredCourses = this.courses;
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+                // Filter by category
+                if (categorySlug !== 'all') {
+                    this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
 
-## Running unit tests
+                }
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+                // Filter by search query
+                if (query !== '') {
+                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
+                        || course.description.toLowerCase().includes(query.toLowerCase())
+                        || course.category.toLowerCase().includes(query.toLowerCase()));
+                }
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+                // Filter by completed
+                if (hideCompleted) {
+                    this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
+                }
+                // set filtercourse size before paginator
+                this.b4PaginatorFilterCourseSize = this.filteredCourses.length;
+                if (this.paginatorObj !== undefined) {
+                    let flag = false;
+                    if (this.initComplete !== hideCompleted) {
+                        flag = true;
+                        this.paginatorObj.firstPage();
+                        this.initComplete = hideCompleted;
+                    }
+                    if (this.initCategory !== categorySlug && !flag) {
+                        flag = true;
+                        this.initCategory = categorySlug;
+                    }
+                    if (this.initQuery !== query && !flag) {
+                        flag = true;
+                        this.initQuery = query;
+                    }
+                    if (flag) {
+                        this.paginatorObj.firstPage();
+                        this.paginatorObj.pageSize = paginator.pageSize;
+                        this.filteredCourses = this.filteredCourses.slice(0, paginator.pageSize);
+                        return;
+                    }
+                }
+                this.filteredCourses = this.filteredCourses.slice(paginator.pageIndex * paginator.pageSize, paginator.pageIndex * paginator.pageSize + paginator.pageSize);
+            });
+```
+The paginator control needs some attention as when other inputs change the final list may change as well, to avoid any page index over the limit I have set the page number to 0 here.
