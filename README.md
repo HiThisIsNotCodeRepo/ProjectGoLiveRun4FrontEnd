@@ -36,58 +36,16 @@ It has a few propertis to suit your need. Here I use `length`,`pageSize`,`pageSi
     >
 </mat-paginator>
 ```
-As we can see, the search page already has some input form. 
+As we can see, the search page already has some input form.
 ![](https://i.imgur.com/eyB3nnh.png)
 That means every time when we set new value or update value the list needs to be updated. This can be achieved by RxJs operators `combineLatest`.
-```
-        combineLatest([this.filters.categorySlug$, this.filters.query$, this.filters.hideCompleted$, this.filters.paginator$])
-            .subscribe(([categorySlug, query, hideCompleted, paginator]) => {
-
-                // Reset the filtered courses
-                this.filteredCourses = this.courses;
-
-                // Filter by category
-                if (categorySlug !== 'all') {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
-
-                }
-
-                // Filter by search query
-                if (query !== '') {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
-                        || course.description.toLowerCase().includes(query.toLowerCase())
-                        || course.category.toLowerCase().includes(query.toLowerCase()));
-                }
-
-                // Filter by completed
-                if (hideCompleted) {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
-                }
-                // set filtercourse size before paginator
-                this.b4PaginatorFilterCourseSize = this.filteredCourses.length;
-                if (this.paginatorObj !== undefined) {
-                    let flag = false;
-                    if (this.initComplete !== hideCompleted) {
-                        flag = true;
-                        this.paginatorObj.firstPage();
-                        this.initComplete = hideCompleted;
-                    }
-                    if (this.initCategory !== categorySlug && !flag) {
-                        flag = true;
-                        this.initCategory = categorySlug;
-                    }
-                    if (this.initQuery !== query && !flag) {
-                        flag = true;
-                        this.initQuery = query;
-                    }
-                    if (flag) {
-                        this.paginatorObj.firstPage();
-                        this.paginatorObj.pageSize = paginator.pageSize;
-                        this.filteredCourses = this.filteredCourses.slice(0, paginator.pageSize);
-                        return;
-                    }
-                }
-                this.filteredCourses = this.filteredCourses.slice(paginator.pageIndex * paginator.pageSize, paginator.pageIndex * paginator.pageSize + paginator.pageSize);
-            });
-```
 The paginator control needs some attention as when other inputs change the final list may change as well, to avoid any page index over the limit I have set the page number to 0 here.
+```
+ if (this.initComplete !== hideCompleted)
+...
+if (this.initCategory !== categorySlug && !flag)
+...
+if (this.initQuery !== query && !flag)
+...
+
+```
