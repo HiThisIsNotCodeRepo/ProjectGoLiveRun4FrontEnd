@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Task } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
 @Injectable({
@@ -55,7 +55,7 @@ export class AcademyCoursesResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course[]>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task[]>
     {
         return this._academyService.getCourses();
     }
@@ -86,7 +86,7 @@ export class AcademyCourseResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task>
     {
         return this._academyService.getCourseById(route.paramMap.get('id'))
                    .pipe(

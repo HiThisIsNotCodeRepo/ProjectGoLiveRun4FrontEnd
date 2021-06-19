@@ -4,7 +4,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Task } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
 {
     @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
     categories: Category[];
-    course: Course;
+    course: Task;
     currentStep: number = 0;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -60,7 +60,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         // Get the course
         this._academyService.course$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((course: Course) => {
+            .subscribe((course: Task) => {
 
                 // Get the course
                 this.course = course;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Task } from 'app/modules/admin/apps/academy/academy.types';
 
 @Injectable({
     providedIn: 'root'
@@ -11,8 +11,8 @@ export class AcademyService
 {
     // Private
     private _categories: BehaviorSubject<Category[] | null> = new BehaviorSubject(null);
-    private _course: BehaviorSubject<Course | null> = new BehaviorSubject(null);
-    private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
+    private _course: BehaviorSubject<Task | null> = new BehaviorSubject(null);
+    private _courses: BehaviorSubject<Task[] | null> = new BehaviorSubject(null);
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ export class AcademyService
     /**
      * Getter for courses
      */
-    get courses$(): Observable<Course[]>
+    get courses$(): Observable<Task[]>
     {
         return this._courses.asObservable();
     }
@@ -44,7 +44,7 @@ export class AcademyService
     /**
      * Getter for course
      */
-    get course$(): Observable<Course>
+    get course$(): Observable<Task>
     {
         return this._course.asObservable();
     }
@@ -58,7 +58,7 @@ export class AcademyService
      */
     getCategories(): Observable<Category[]>
     {
-        return this._httpClient.get<Category[]>('api/apps/academy/categories').pipe(
+        return this._httpClient.get<Category[]>('api/categories').pipe(
             tap((response: any) => {
                 this._categories.next(response);
             })
@@ -68,9 +68,9 @@ export class AcademyService
     /**
      * Get courses
      */
-    getCourses(): Observable<Course[]>
+    getCourses(): Observable<Task[]>
     {
-        return this._httpClient.get<Course[]>('api/apps/academy/courses').pipe(
+        return this._httpClient.get<Task[]>('api/tasks').pipe(
             tap((response: any) => {
                 this._courses.next(response);
             })
@@ -80,9 +80,9 @@ export class AcademyService
     /**
      * Get course by id
      */
-    getCourseById(id: string): Observable<Course>
+    getCourseById(id: string): Observable<Task>
     {
-        return this._httpClient.get<Course>('api/apps/academy/courses/course', {params: {id}}).pipe(
+        return this._httpClient.get<Task>('api/tasks/task', {params: {id}}).pipe(
             map((course) => {
 
                 // Update the course

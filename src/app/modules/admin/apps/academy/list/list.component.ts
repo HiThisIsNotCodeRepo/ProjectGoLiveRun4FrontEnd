@@ -13,7 +13,7 @@ import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {BehaviorSubject, combineLatest, Subject} from 'rxjs';
 import {concatAll, takeUntil} from 'rxjs/operators';
 import {AcademyService} from 'app/modules/admin/apps/academy/academy.service';
-import {Category, Course, Paginator} from 'app/modules/admin/apps/academy/academy.types';
+import {Category, Task, Paginator} from 'app/modules/admin/apps/academy/academy.types';
 
 @Component({
     selector: 'academy-list',
@@ -31,8 +31,8 @@ export class AcademyListComponent implements OnInit, OnDestroy {
         pageSize: 3,
     };
     categories: Category[];
-    courses: Course[];
-    filteredCourses: Course[];
+    courses: Task[];
+    filteredCourses: Task[];
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -84,7 +84,7 @@ export class AcademyListComponent implements OnInit, OnDestroy {
         // Get the courses
         this._academyService.courses$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((courses: Course[]) => {
+            .subscribe((courses: Task[]) => {
                 this.courses = this.filteredCourses = courses;
 
                 // Mark for check

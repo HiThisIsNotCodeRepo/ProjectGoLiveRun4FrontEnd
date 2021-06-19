@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { FuseMockApiService } from '@fuse/lib/mock-api/mock-api.service';
-import { categories as categoriesData, courses as coursesData, demoCourseSteps as demoCourseStepsData } from 'app/mock-api/apps/academy/data';
+import { categories as categoriesData, tasks as tasksData, taskSteps as taskStepsData } from 'app/mock-api/apps/academy/data';
 
 @Injectable({
     providedIn: 'root'
@@ -9,8 +9,8 @@ import { categories as categoriesData, courses as coursesData, demoCourseSteps a
 export class AcademyMockApi
 {
     private _categories: any[] = categoriesData;
-    private _courses: any[] = coursesData;
-    private _demoCourseSteps: any[] = demoCourseStepsData;
+    private _courses: any[] = tasksData;
+    private _demoCourseSteps: any[] = taskStepsData;
 
     /**
      * Constructor
@@ -34,7 +34,7 @@ export class AcademyMockApi
         // @ Categories - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/academy/categories')
+            .onGet('api/categories')
             .reply(() => {
 
                 // Clone the categories
@@ -50,7 +50,7 @@ export class AcademyMockApi
         // @ Courses - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/academy/courses')
+            .onGet('api/tasks')
             .reply(() => {
 
                 // Clone the courses
@@ -63,7 +63,7 @@ export class AcademyMockApi
         // @ Course - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/academy/courses/course')
+            .onGet('api/tasks/task')
             .reply(({request}) => {
 
                 // Get the id from the params
