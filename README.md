@@ -37,7 +37,7 @@ It has a few propertis to suit your need. Here I use `length`,`pageSize`,`pageSi
 </mat-paginator>
 ```
 As we can see, the search page already has some input form.
-![](https://i.imgur.com/eyB3nnh.png)
+![Alt_Text](https://i.imgur.com/eyB3nnh.png)
 That means every time when we set new value or update value the list needs to be updated. This can be achieved by RxJs operators `combineLatest`.
 The paginator control needs some attention as when other inputs change the final list may change as well, to avoid any page index over the limit I have set the page number to 0 here.
 ```
