@@ -51,9 +51,9 @@ export const shortcuts = [
     {
         id         : '56a0a561-17e7-40b3-bd75-0b6cef230b7e',
         label      : 'Tasks',
-        description: '12 unfinished tasks',
+        description: '12 unfinished post-browse-task',
         icon       : 'heroicons_outline:check-circle',
-        link       : '/apps/tasks',
+        link       : '/apps/post-browse-task',
         useRouter  : true
     },
     {

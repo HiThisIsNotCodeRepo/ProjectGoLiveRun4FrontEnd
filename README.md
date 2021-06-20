@@ -21,8 +21,7 @@ To expediate front end developement, I have choosen a [template](https://themefo
 4. Task inseration page.
 
 ## Update on 2021/6/19
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/assets/gif/Animation.gif)
-
+- Work on the task search feature.
 ### How to make paginator work
 The paginator feature is with `<mat-paginator>`tag,you can find the reference [here](https://material.angular.io/components/paginator/overview).
 It has a few propertis to suit your need. Here I use `length`,`pageSize`,`pageSizeOptions`, and event `page`.
@@ -49,3 +48,12 @@ if (this.initQuery !== query && !flag)
 ...
 
 ```
+## Update on 2021/6/20
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/assets/gif/Animation.gif)
+### Update list
+1. Remove unnecessary files.
+2. Improve task search interface
+    1. Now it has 3 phases to transit between different stage
+    2. Improve main interface to accomodate task search and task post features.
+
+![](https://i.imgur.com/loUh43E.png)

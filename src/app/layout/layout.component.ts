@@ -110,7 +110,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
         //    Set layout & theme
         this.setLayout('material');
-        this.setTheme('rose');
+        this.setTheme('default');
     }
 
     /**
