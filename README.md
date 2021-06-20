@@ -21,7 +21,7 @@ To expediate front end developement, I have choosen a [template](https://themefo
 4. Task inseration page.
 
 ## Update on 2021/6/19
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/tree/master/src/assets/gif/Animation.gif)
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/assets/gif/Animation.gif)
 
 ### How to make paginator work
 The paginator feature is with `<mat-paginator>`tag,you can find the reference [here](https://material.angular.io/components/paginator/overview).
