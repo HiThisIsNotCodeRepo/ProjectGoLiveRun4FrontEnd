@@ -17,7 +17,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
 {
     @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
     categories: Category[];
-    course: Task;
+    task: Task;
     currentStep: number = 0;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -58,15 +58,15 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
             });
 
         // Get the course
-        this._academyService.course$
+        this._academyService.task$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((course: Task) => {
+            .subscribe((task: Task) => {
 
                 // Get the course
-                this.course = course;
+                this.task = task;
 
                 // Go to step
-                this.goToStep(course.progress.currentStep);
+                this.goToStep(task.currentStep);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -143,23 +143,23 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         this._scrollCurrentStepElementIntoView();
     }
 
-    /**
-     * Go to next step
-     */
-    goToNextStep(): void
-    {
-        // Return if we already on the last step
-        if ( this.currentStep === this.course.totalSteps - 1 )
-        {
-            return;
-        }
-
-        // Go to step
-        this.goToStep(this.currentStep + 1);
-
-        // Scroll the current step selector from sidenav into view
-        this._scrollCurrentStepElementIntoView();
-    }
+    // /**
+    //  * Go to next step
+    //  */
+    // goToNextStep(): void
+    // {
+    //     // Return if we already on the last step
+    //     if ( this.currentStep === this.task.totalSteps - 1 )
+    //     {
+    //         return;
+    //     }
+    //
+    //     // Go to step
+    //     this.goToStep(this.currentStep + 1);
+    //
+    //     // Scroll the current step selector from sidenav into view
+    //     this._scrollCurrentStepElementIntoView();
+    // }
 
     /**
      * Track by function for ngFor loops

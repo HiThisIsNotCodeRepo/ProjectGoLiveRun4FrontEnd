@@ -7,23 +7,22 @@ export interface Category {
 export interface Task {
     id?: string;
     title?: string;
-    slug?: string;
     description?: string;
     category?: string;
+    date?: string;
+    time?: string;
     duration?: number;
+    currentStep?: number;
+    assignedUserId?: string;
+    from?: string;
+    to?: string;
+    expectedRate: number;
+    agreedRate: number;
     steps?: {
         order?: number;
         title?: string;
-        subtitle?: string;
         content?: string;
     }[];
-    totalSteps?: number;
-    updatedAt?: number;
-    featured?: boolean;
-    progress?: {
-        currentStep?: number;
-        completed?: number;
-    };
 }
 
 export interface Paginator {

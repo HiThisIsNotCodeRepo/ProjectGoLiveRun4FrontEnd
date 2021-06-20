@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatSelectChange} from '@angular/material/select';
 import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {BehaviorSubject, combineLatest, Subject} from 'rxjs';
-import {concatAll, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {AcademyService} from 'app/modules/admin/apps/academy/academy.service';
 import {Category, Task, Paginator} from 'app/modules/admin/apps/academy/academy.types';
 
@@ -31,8 +31,8 @@ export class AcademyListComponent implements OnInit, OnDestroy {
         pageSize: 3,
     };
     categories: Category[];
-    courses: Task[];
-    filteredCourses: Task[];
+    tasks: Task[];
+    filteredTasks: Task[];
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -49,7 +49,7 @@ export class AcademyListComponent implements OnInit, OnDestroy {
 
     pageSize = 3;
     pageSizeOptions: number[] = [3, 9];
-    b4PaginatorFilterCourseSize: number;
+    b4PaginatorFilterTaskSize: number;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -82,10 +82,10 @@ export class AcademyListComponent implements OnInit, OnDestroy {
             });
 
         // Get the courses
-        this._academyService.courses$
+        this._academyService.tasks$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((courses: Task[]) => {
-                this.courses = this.filteredCourses = courses;
+            .subscribe((tasks: Task[]) => {
+                this.tasks = this.filteredTasks = tasks;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -96,27 +96,27 @@ export class AcademyListComponent implements OnInit, OnDestroy {
             .subscribe(([categorySlug, query, hideCompleted, paginator]) => {
 
                 // Reset the filtered courses
-                this.filteredCourses = this.courses;
+                this.filteredTasks = this.tasks;
 
                 // Filter by category
                 if (categorySlug !== 'all') {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
+                    this.filteredTasks = this.filteredTasks.filter(task => task.category === categorySlug);
 
                 }
 
                 // Filter by search query
                 if (query !== '') {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
-                        || course.description.toLowerCase().includes(query.toLowerCase())
-                        || course.category.toLowerCase().includes(query.toLowerCase()));
+                    this.filteredTasks = this.filteredTasks.filter(task => task.title.toLowerCase().includes(query.toLowerCase())
+                        || task.description.toLowerCase().includes(query.toLowerCase())
+                        || task.category.toLowerCase().includes(query.toLowerCase()));
                 }
 
                 // Filter by completed
                 if (hideCompleted) {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
+                    this.filteredTasks = this.filteredTasks.filter(task => task.assignedUserId === '');
                 }
                 // set filtercourse size before paginator
-                this.b4PaginatorFilterCourseSize = this.filteredCourses.length;
+                this.b4PaginatorFilterTaskSize = this.filteredTasks.length;
                 if (this.paginatorObj !== undefined) {
                     let flag = false;
                     if (this.initComplete !== hideCompleted) {
@@ -135,11 +135,11 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                     if (flag) {
                         this.paginatorObj.firstPage();
                         this.paginatorObj.pageSize = paginator.pageSize;
-                        this.filteredCourses = this.filteredCourses.slice(0, paginator.pageSize);
+                        this.filteredTasks = this.filteredTasks.slice(0, paginator.pageSize);
                         return;
                     }
                 }
-                this.filteredCourses = this.filteredCourses.slice(paginator.pageIndex * paginator.pageSize, paginator.pageIndex * paginator.pageSize + paginator.pageSize);
+                this.filteredTasks = this.filteredTasks.slice(paginator.pageIndex * paginator.pageSize, paginator.pageIndex * paginator.pageSize + paginator.pageSize);
             });
     }
 

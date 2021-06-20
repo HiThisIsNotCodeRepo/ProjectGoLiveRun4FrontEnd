@@ -57,7 +57,7 @@ export class AcademyCoursesResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task[]>
     {
-        return this._academyService.getCourses();
+        return this._academyService.getTasks();
     }
 }
 
@@ -88,7 +88,7 @@ export class AcademyCourseResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task>
     {
-        return this._academyService.getCourseById(route.paramMap.get('id'))
+        return this._academyService.getTaskById(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
