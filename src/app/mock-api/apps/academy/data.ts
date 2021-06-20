@@ -34,8 +34,9 @@ export const tasks = [
         expectedRate: 10,
         agreedRate: 0,
         duration: 30,
-        currentStep: 2,
-        assignedUserId: 'a',
+        currentStep: 0,
+        assignedUserId: 'aA',
+        taskOwnerId: 'owner1',
     },
     {
         id: 'f924007a-2ee9-470b-a316-8d21ed78277f',
@@ -48,9 +49,10 @@ export const tasks = [
         time: '19:33',
         expectedRate: 20,
         agreedRate: 0,
-        duration: 60,
-        currentStep: 0,
+        duration: 15,
+        currentStep: 1,
         assignedUserId: 'b',
+        taskOwnerId: 'owner2',
     },
     {
         id: '0c06e980-abb5-4ba7-ab65-99a228cab36b',
@@ -63,9 +65,10 @@ export const tasks = [
         time: '19:33',
         expectedRate: 15,
         agreedRate: 0,
-        duration: 60,
+        duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner3',
     },
     {
         id: '1b9a9acc-9a36-403e-a1e7-b11780179e38',
@@ -81,6 +84,7 @@ export const tasks = [
         duration: 30,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner4',
     },
     {
         id: '55eb415f-3f4e-4853-a22b-f0ae91331169',
@@ -96,6 +100,7 @@ export const tasks = [
         duration: 30,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner5',
     },
     {
         id: 'fad2ab23-1011-4028-9a54-e52179ac4a50',
@@ -111,6 +116,7 @@ export const tasks = [
         duration: 30,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner5',
     },
     {
         id: 'c4bc107b-edc4-47a7-a7a8-4fb09732e794',
@@ -126,6 +132,7 @@ export const tasks = [
         duration: 30,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner6',
     },
     {
         id: '1449f945-d032-460d-98e3-406565a22293',
@@ -141,6 +148,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner7',
     },
     {
         id: 'f05e08ab-f3e3-4597-a032-6a4b69816f24',
@@ -156,6 +164,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner8',
     },
     {
         id: '181728f4-87c8-45c5-b9cc-92265bcd2f4d',
@@ -171,6 +180,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner9',
     },
     {
         id: 'fcbfedbf-6187-4b3b-89d3-1a7cb4e11616',
@@ -186,6 +196,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner10',
     },
     {
         id: '5213f6a1-1dd7-4b1d-b6e9-ffb7af534f28',
@@ -201,6 +212,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner11',
     },
     {
         id: '02992ac9-d1a3-4167-b70e-8a1d5b5ba253',
@@ -216,6 +228,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner12',
     },
     {
         id: '2139512f-41fb-4a4a-841a-0b4ac034f9b4',
@@ -231,6 +244,7 @@ export const tasks = [
         duration: 15,
         currentStep: 0,
         assignedUserId: '',
+        taskOwnerId: 'owner13',
     },
 ];
 export const demoTaskIssuedContent = `
@@ -246,16 +260,22 @@ export const taskSteps = [
     {
         order: 0,
         title: 'Task Issued',
-        content: `<h2 class="text-2xl sm:text-3xl">Task Issued</h1>${demoTaskIssuedContent}`
+        subTitle: `Task is issued! Now the task description is available!`,
+        content: `<h2 class="text-2xl sm:text-3xl">Task Issued</h1>
+<h3>Description</h3>
+${demoTaskIssuedContent}
+`
     },
     {
         order: 1,
         title: 'Task Execution',
+        subTitle: `Task is in execution stage! Complete before due time to avoid penalty.`,
         content: `<h2 class="text-2xl sm:text-3xl">Task Execution</h1>${demoTaskExecutionContent}`
     },
     {
         order: 2,
         title: 'Task Complete',
+        subTitle: `Task is complete.`,
         content: `<h2 class="text-2xl sm:text-3xl">Task Complete</h1>${demoTaskCompleteContent}`
     },
 ];

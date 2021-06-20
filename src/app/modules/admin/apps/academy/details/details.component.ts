@@ -1,23 +1,32 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { MatTabGroup } from '@angular/material/tabs';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Category, Task } from 'app/modules/admin/apps/academy/academy.types';
-import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {MatTabGroup} from '@angular/material/tabs';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
+import {Category, Task} from 'app/modules/admin/apps/academy/academy.types';
+import {AcademyService} from 'app/modules/admin/apps/academy/academy.service';
 
 @Component({
-    selector       : 'academy-details',
-    templateUrl    : './details.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'academy-details',
+    templateUrl: './details.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AcademyDetailsComponent implements OnInit, OnDestroy
-{
+export class AcademyDetailsComponent implements OnInit, OnDestroy {
     @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
     categories: Category[];
-    task: Task;
+    public task: Task;
     currentStep: number = 0;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -32,8 +41,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _elementRef: ElementRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -43,8 +51,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Get the categories
         this._academyService.categories$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -78,13 +85,10 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
             .subscribe(({matchingAliases}) => {
 
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
-                }
-                else
-                {
+                } else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -97,8 +101,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -113,8 +116,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      *
      * @param step
      */
-    goToStep(step: number): void
-    {
+    goToStep(step: number): void {
         // Set the current step
         this.currentStep = step;
 
@@ -128,11 +130,9 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * Go to previous step
      */
-    goToPreviousStep(): void
-    {
+    goToPreviousStep(): void {
         // Return if we already on the first step
-        if ( this.currentStep === 0 )
-        {
+        if (this.currentStep === 0) {
             return;
         }
 
@@ -146,20 +146,18 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     // /**
     //  * Go to next step
     //  */
-    // goToNextStep(): void
-    // {
-    //     // Return if we already on the last step
-    //     if ( this.currentStep === this.task.totalSteps - 1 )
-    //     {
-    //         return;
-    //     }
-    //
-    //     // Go to step
-    //     this.goToStep(this.currentStep + 1);
-    //
-    //     // Scroll the current step selector from sidenav into view
-    //     this._scrollCurrentStepElementIntoView();
-    // }
+    goToNextStep(): void {
+        // Return if we already on the last step
+        if (this.currentStep === 2 || this.currentStep >= this.task.currentStep) {
+            return;
+        }
+
+        // Go to step
+        this.goToStep(this.currentStep + 1);
+
+        // Scroll the current step selector from sidenav into view
+        this._scrollCurrentStepElementIntoView();
+    }
 
     /**
      * Track by function for ngFor loops
@@ -167,8 +165,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
@@ -185,18 +182,16 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      *
      * @private
      */
-    private _scrollCurrentStepElementIntoView(): void
-    {
+    private _scrollCurrentStepElementIntoView(): void {
         // Wrap everything into setTimeout so we can make sure that the 'current-step' class points to correct element
         setTimeout(() => {
 
             // Get the current step element and scroll it into view
             const currentStepElement = this._document.getElementsByClassName('current-step')[0];
-            if ( currentStepElement )
-            {
+            if (currentStepElement) {
                 currentStepElement.scrollIntoView({
                     behavior: 'smooth',
-                    block   : 'start'
+                    block: 'start'
                 });
             }
         });
