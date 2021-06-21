@@ -9,7 +9,7 @@ import { NotificationsMockApi } from 'app/mock-api/common/notifications/api';
 import { ProjectMockApi } from 'app/mock-api/dashboards/project/api';
 import { SearchMockApi } from 'app/mock-api/common/search/api';
 import { ShortcutsMockApi } from 'app/mock-api/common/shortcuts/api';
-import { TasksMockApi } from 'app/mock-api/apps/issue-task/api';
+import { TasksMockApi } from 'app/mock-api/apps/post-task/api';
 import { UserMockApi } from 'app/mock-api/common/user/api';
 
 export const mockApiServices = [
