@@ -19,12 +19,12 @@ To expediate front end developement, I have choosen a [template](https://themefo
 
 ## Document Link
 ### Git
-[git update]()
+[git update](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/git/git.md)
 ### Angular
-[angular update]()
+[angular update](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/angular/angular.md)
 ### Log
-1. [20210619]()
-2. [20210620]()
+1. [20210619](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/log/log_20210619.md)
+2. [20210620](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/log/log_20210620.md)
 
 
 
