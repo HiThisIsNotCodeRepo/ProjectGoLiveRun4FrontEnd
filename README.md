@@ -12,48 +12,19 @@ Due to Covid 19, an ad hoc job posting platform has emerged to provide more job 
 To expediate front end developement, I have choosen a [template](https://themeforest.net/item/fuse-angularjs-material-design-admin-template/12931855?gclid=CjwKCAjwq7aGBhADEiwA6uGZpx14Dv86Apxo_47dPNLqdKC3U5N7gDGr9eBmZ-sn1-lpdgRpDAkTvhoCTmUQAvD_BwE) which provide UI structure layout and material components. So I can more focus on the logic development.
 
 ## Core Feature I Expected To Accomplish In Front End
-1. User registeration page.
-    - Use the template page in the UI template.
-3. User login.
-    - Use the template page in the UI template.
-3. Search task page.
-    - The original template page in the UI template isn't good enough, for example it lacks of pagination control
-4. Task inseration page.
+1. User registration.
+2. User login.
+3. Task search.
+4. Task post.
 
-## Update on 2021/6/19
-- Work on the task search feature.
-### How to make paginator work
-The paginator feature is with `<mat-paginator>`tag,you can find the reference [here](https://material.angular.io/components/paginator/overview).
-It has a few propertis to suit your need. Here I use `length`,`pageSize`,`pageSizeOptions`, and event `page`.
-```
-<mat-paginator
-    #paginatorObj
-    [length]="b4PaginatorFilterCourseSize"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
-    (page)="handlePageEvent($event)">
-    >
-</mat-paginator>
-```
-As we can see, the search page already has some input form.
-![Alt_Text](https://i.imgur.com/eyB3nnh.png)
-That means every time when we set new value or update value the list needs to be updated. This can be achieved by RxJs operators `combineLatest`.
-The paginator control needs some attention as when other inputs change the final list may change as well, to avoid any page index over the limit I have set the page number to 0 here.
-```
- if (this.initComplete !== hideCompleted)
-...
-if (this.initCategory !== categorySlug && !flag)
-...
-if (this.initQuery !== query && !flag)
-...
+## Document Link
+### Git
+[git update](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/git/git.md)
+### Angular
+[angular update](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/angular/angular.md)
+### Log
+1. [20210619](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/log/log_20210619.md)
+2. [20210620](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/log/log_20210620.md)
 
-```
-## Update on 2021/6/20
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/assets/gif/Animation.gif)
-### Update list
-1. Remove unnecessary files.
-2. Improve task search interface
-    1. Now it has 3 phases to transit between different stage
-    2. Improve main interface to accomodate task search and task post features.
 
-![](https://i.imgur.com/loUh43E.png)
+
