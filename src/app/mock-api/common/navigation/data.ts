@@ -11,7 +11,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link: '/browse-browse-task',
     },
     {
-        id: 'issue-task',
+        id: 'post-task',
         title: 'Issue Task',
         type: 'basic',
         icon: 'heroicons_outline:plus-circle',
@@ -28,7 +28,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         link: '/browse-browse-task'
     },
     {
-        id: 'issue-task',
+        id: 'post-task',
         title: 'Issue Task',
         type: 'basic',
         icon: 'heroicons_outline:plus-circle',
