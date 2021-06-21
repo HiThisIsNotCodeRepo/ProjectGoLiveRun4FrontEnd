@@ -51,9 +51,9 @@ export const shortcuts = [
     {
         id         : '56a0a561-17e7-40b3-bd75-0b6cef230b7e',
         label      : 'Tasks',
-        description: '12 unfinished post-browse-task',
+        description: '12 unfinished post-search-task',
         icon       : 'heroicons_outline:check-circle',
-        link       : '/apps/post-browse-task',
+        link       : '/apps/post-search-task',
         useRouter  : true
     },
     {
@@ -69,7 +69,7 @@ export const shortcuts = [
         label      : 'Reload',
         description: 'Reload the app',
         icon       : 'heroicons_outline:refresh',
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : false
     }
 ];

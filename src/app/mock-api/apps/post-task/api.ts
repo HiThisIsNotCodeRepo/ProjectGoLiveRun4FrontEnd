@@ -34,7 +34,7 @@ export class TasksMockApi
         // @ Tags - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-browse-task/tags')
+            .onGet('api/apps/post-task/tags')
             .reply(() => [
                 200,
                 cloneDeep(this._tags)
@@ -44,7 +44,7 @@ export class TasksMockApi
         // @ Tags - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/apps/post-browse-task/tag')
+            .onPost('api/apps/post-task/tag')
             .reply(({request}) => {
 
                 // Get the tag
@@ -66,7 +66,7 @@ export class TasksMockApi
         // @ Tags - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPatch('api/apps/post-browse-task/tag')
+            .onPatch('api/apps/post-task/tag')
             .reply(({request}) => {
 
                 // Get the id and tag
@@ -99,7 +99,7 @@ export class TasksMockApi
         // @ Tag - DELETE
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onDelete('api/apps/post-browse-task/tag')
+            .onDelete('api/apps/post-task/tag')
             .reply(({request}) => {
 
                 // Get the id
@@ -109,7 +109,7 @@ export class TasksMockApi
                 const index = this._tags.findIndex(item => item.id === id);
                 this._tags.splice(index, 1);
 
-                // Get the post-browse-task that have the tag
+                // Get the post-search-task that have the tag
                 const tasksWithTag = this._tasks.filter(task => task.tags.indexOf(id) > -1);
 
                 // Iterate through them and remove the tag
@@ -127,13 +127,13 @@ export class TasksMockApi
         // @ Tasks - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-browse-task/all')
+            .onGet('api/apps/post-task/all')
             .reply(() => {
 
-                // Clone the post-browse-task
+                // Clone the post-search-task
                 const tasks = cloneDeep(this._tasks);
 
-                // Sort the post-browse-task by order
+                // Sort the post-search-task by order
                 tasks.sort((a, b) => a.order - b.order);
 
                 return [
@@ -146,7 +146,7 @@ export class TasksMockApi
         // @ Tasks Search - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-browse-task/search')
+            .onGet('api/apps/post-task/search')
             .reply(({request}) => {
 
                 // Get the search query
@@ -158,10 +158,10 @@ export class TasksMockApi
                 // If the query exists...
                 if ( query )
                 {
-                    // Clone the post-browse-task
+                    // Clone the post-search-task
                     let tasks = cloneDeep(this._tasks);
 
-                    // Filter the post-browse-task
+                    // Filter the post-search-task
                     tasks = tasks.filter(task => task.title && task.title.toLowerCase().includes(query.toLowerCase()) || task.notes && task.notes.toLowerCase()
                                                                                                                                            .includes(query.toLowerCase()));
 
@@ -190,21 +190,21 @@ export class TasksMockApi
         // @ Tasks Orders - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPatch('api/apps/post-browse-task/order')
+            .onPatch('api/apps/post-task/order')
             .reply(({request}) => {
 
-                // Get the post-browse-task
+                // Get the post-search-task
                 const tasks = request.body.tasks;
 
-                // Go through the post-browse-task
+                // Go through the post-search-task
                 this._tasks.forEach((task) => {
 
-                    // Find this browse-task's index within the post-browse-task array that comes with the request
-                    // and assign that index as the new order number for the browse-task
+                    // Find this search-task's index within the post-search-task array that comes with the request
+                    // and assign that index as the new order number for the search-task
                     task.order = tasks.findIndex((item: any) => item.id === task.id);
                 });
 
-                // Clone the post-browse-task
+                // Clone the post-search-task
                 const updatedTasks = cloneDeep(this._tasks);
 
                 return [
@@ -217,16 +217,16 @@ export class TasksMockApi
         // @ Task - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-browse-task/browse-task')
+            .onGet('api/apps/post-task/task')
             .reply(({request}) => {
 
                 // Get the id from the params
                 const id = request.params.get('id');
 
-                // Clone the post-browse-task
+                // Clone the post-search-task
                 const tasks = cloneDeep(this._tasks);
 
-                // Find the browse-task
+                // Find the search-task
                 const task = tasks.find(item => item.id === id);
 
                 return [
@@ -239,10 +239,10 @@ export class TasksMockApi
         // @ Task - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/apps/post-browse-task/browse-task')
+            .onPost('api/apps/post-task/task')
             .reply(({request}) => {
 
-                // Generate a new browse-task
+                // Generate a new search-task
                 const newTask = {
                     id       : FuseMockApiUtils.guid(),
                     type     : request.body.type,
@@ -255,10 +255,10 @@ export class TasksMockApi
                     order    : 0
                 };
 
-                // Unshift the new browse-task
+                // Unshift the new search-task
                 this._tasks.unshift(newTask);
 
-                // Go through the post-browse-task and update their order numbers
+                // Go through the post-search-task and update their order numbers
                 this._tasks.forEach((task, index) => {
                     task.order = index;
                 });
@@ -273,25 +273,25 @@ export class TasksMockApi
         // @ Task - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPatch('api/apps/post-browse-task/browse-task')
+            .onPatch('api/apps/post-task/task')
             .reply(({request}) => {
 
-                // Get the id and browse-task
+                // Get the id and search-task
                 const id = request.body.id;
                 const task = cloneDeep(request.body.task);
 
-                // Prepare the updated browse-task
+                // Prepare the updated search-task
                 let updatedTask = null;
 
-                // Find the browse-task and update it
+                // Find the search-task and update it
                 this._tasks.forEach((item, index, tasks) => {
 
                     if ( item.id === id )
                     {
-                        // Update the browse-task
+                        // Update the search-task
                         tasks[index] = assign({}, tasks[index], task);
 
-                        // Store the updated browse-task
+                        // Store the updated search-task
                         updatedTask = tasks[index];
                     }
                 });
@@ -306,13 +306,13 @@ export class TasksMockApi
         // @ Task - DELETE
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onDelete('api/apps/post-browse-task/browse-task')
+            .onDelete('api/apps/post-task/task')
             .reply(({request}) => {
 
                 // Get the id
                 const id = request.params.get('id');
 
-                // Find the browse-task and delete it
+                // Find the search-task and delete it
                 const index = this._tasks.findIndex(item => item.id === id);
                 this._tasks.splice(index, 1);
 

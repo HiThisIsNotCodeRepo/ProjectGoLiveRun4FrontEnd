@@ -9,14 +9,14 @@ import {InitialDataResolver} from 'app/app.resolvers';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
-    {path: '', pathMatch: 'full', redirectTo: 'browse-task'},
+    {path: '', pathMatch: 'full', redirectTo: 'search-task'},
 
     // Redirect signed in user to the '/example'
     //
     // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'browse-task'},
+    {path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'search-task'},
 
     // Auth routes for guests
     {
@@ -99,12 +99,16 @@ export const appRoutes: Route[] = [
         children: [
             // Apps
             {
-                path: 'browse-task',
-                loadChildren: () => import('app/modules/apps/browse-task/browse-task.module').then(m => m.BrowseTaskModule)
+                path: 'dashboard',
+                loadChildren: () => import('app/modules/apps/dashboard/project.module').then(m => m.ProjectModule)
             },
             {
-                path: 'post-task',
-                loadChildren: () => import('app/modules/apps/post-task/post-task.module').then(m => m.PostTaskModule)
+                path: 'search-task',
+                loadChildren: () => import('app/modules/apps/search-task/browse-task.module').then(m => m.BrowseTaskModule)
+            },
+            {
+                path: 'new-task',
+                loadChildren: () => import('app/modules/apps/new-task/wizards.module').then(m => m.FormsWizardsModule)
             },
             // 404 page
             {

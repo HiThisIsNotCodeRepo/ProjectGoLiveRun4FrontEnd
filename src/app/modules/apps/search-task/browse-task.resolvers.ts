@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable, throwError, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {Category, Task} from 'app/modules/apps/browse-task/browse-task.types';
-import {TaskService} from 'app/modules/apps/browse-task/browse-task.service';
+import {Category, Task} from 'app/modules/apps/search-task/browse-task.types';
+import {TaskService} from 'app/modules/apps/search-task/browse-task.service';
 
 @Injectable({
     providedIn: 'root'
@@ -89,7 +89,7 @@ export class TaskDetailResolver implements Resolve<any> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task> {
         return this._taskService.getTaskById(route.paramMap.get('id'))
             .pipe(
-                // Error here means the requested browse-task is not available
+                // Error here means the requested search-task is not available
                 catchError((error) => {
 
                     // Log the error
