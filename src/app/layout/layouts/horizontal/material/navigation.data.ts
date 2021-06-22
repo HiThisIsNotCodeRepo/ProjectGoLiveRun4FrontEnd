@@ -9,13 +9,6 @@ export const naviData: Navigation = {
     default:
         [
             {
-                id: 'dashboards',
-                title: 'Dashboards',
-                type: 'basic',
-                icon: 'heroicons_outline:home',
-                link: '/dashboard',
-            },
-            {
                 id: 'search-task',
                 title: 'Search Task',
                 type: 'basic',
@@ -28,17 +21,17 @@ export const naviData: Navigation = {
                 type: 'basic',
                 icon: 'heroicons_outline:plus-circle',
                 link: '/new-task',
+            },
+            {
+                id: 'me',
+                title: 'Me',
+                type: 'basic',
+                icon: 'heroicons_outline:home',
+                link: '/me',
             }
         ],
     horizontal:
         [
-            {
-                id: 'dashboards',
-                title: 'Dashboards',
-                type: 'basic',
-                icon: 'heroicons_outline:home',
-                link: '/dashboard',
-            },
             {
                 id: 'search-task',
                 title: 'Search Task',
@@ -53,5 +46,12 @@ export const naviData: Navigation = {
                 icon: 'heroicons_outline:plus-circle',
                 link: '/new-task',
             },
+            {
+                id: 'me',
+                title: 'Me',
+                type: 'basic',
+                icon: 'heroicons_outline:home',
+                link: '/me',
+            }
         ]
 };

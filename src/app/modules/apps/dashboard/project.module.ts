@@ -15,7 +15,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import {ProjectComponent} from './project.component';
 import {projectRoutes} from './project.routing';
-import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
     declarations: [
