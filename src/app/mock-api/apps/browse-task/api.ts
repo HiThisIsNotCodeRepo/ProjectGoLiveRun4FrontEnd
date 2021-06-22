@@ -50,7 +50,7 @@ export class TaskMockApi
         // @ Courses - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/browse-task')
+            .onGet('api/search-task')
             .reply(() => {
 
                 // Clone the courses
@@ -63,7 +63,7 @@ export class TaskMockApi
         // @ Course - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/browse-task/task')
+            .onGet('api/search-task/task')
             .reply(({request}) => {
 
                 // Get the id from the params

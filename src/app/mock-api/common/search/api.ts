@@ -54,7 +54,7 @@ export class SearchMockApi {
                 const pagesResults = cloneDeep(flatNavigation)
                     .filter(page => (page.title?.toLowerCase().includes(query) || (page.subtitle && page.subtitle.includes(query))));
 
-                // Filter the post-browse-task
+                // Filter the post-search-task
                 const tasksResults = cloneDeep(this._tasks)
                     .filter(task => task.title.toLowerCase().includes(query));
 
@@ -76,13 +76,13 @@ export class SearchMockApi {
                     });
                 }
 
-                // If there are post-browse-task results...
+                // If there are post-search-task results...
                 if (tasksResults.length > 0) {
                     // Normalize the results
                     tasksResults.forEach((result) => {
 
                         // Add a link
-                        result.link = '/apps/post-browse-task/' + result.id;
+                        result.link = '/apps/post-search-task/' + result.id;
                     });
 
                     // Add to the results

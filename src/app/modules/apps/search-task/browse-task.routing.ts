@@ -1,8 +1,8 @@
 import { Route } from '@angular/router';
-import { BrowseTaskComponent } from 'app/modules/apps/browse-task/browse-task.component';
-import { TaskListComponent } from 'app/modules/apps/browse-task/list/list.component';
-import { TaskDetailsComponent } from 'app/modules/apps/browse-task/details/details.component';
-import { TaskCategoriesResolver, TaskDetailResolver, TaskListResolver } from 'app/modules/apps/browse-task/browse-task.resolvers';
+import { BrowseTaskComponent } from 'app/modules/apps/search-task/browse-task.component';
+import { TaskListComponent } from 'app/modules/apps/search-task/list/list.component';
+import { TaskDetailsComponent } from 'app/modules/apps/search-task/details/details.component';
+import { TaskCategoriesResolver, TaskDetailResolver, TaskListResolver } from 'app/modules/apps/search-task/browse-task.resolvers';
 
 export const academyRoutes: Route[] = [
     {

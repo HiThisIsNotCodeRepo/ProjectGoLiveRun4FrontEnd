@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Category, Task } from 'app/modules/apps/browse-task/browse-task.types';
+import { Category, Task } from 'app/modules/apps/search-task/browse-task.types';
 
 @Injectable({
     providedIn: 'root'
@@ -70,7 +70,7 @@ export class TaskService
      */
     getTasks(): Observable<Task[]>
     {
-        return this._httpClient.get<Task[]>('api/browse-task').pipe(
+        return this._httpClient.get<Task[]>('api/search-task').pipe(
             tap((response: any) => {
                 this._tasks.next(response);
             })
@@ -82,7 +82,7 @@ export class TaskService
      */
     getTaskById(id: string): Observable<Task>
     {
-        return this._httpClient.get<Task>('api/browse-task/task', {params: {id}}).pipe(
+        return this._httpClient.get<Task>('api/search-task/task', {params: {id}}).pipe(
             map((task) => {
 
                 // Update the course

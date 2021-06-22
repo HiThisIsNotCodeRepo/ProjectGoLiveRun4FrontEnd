@@ -1,43 +1,57 @@
-import { FuseNavigationItem } from '@fuse/components/navigation';
-export interface Navigation
-{
+import {FuseNavigationItem} from '@fuse/components/navigation';
+
+export interface Navigation {
     default: FuseNavigationItem[];
     horizontal: FuseNavigationItem[];
 }
+
 export const naviData: Navigation = {
     default:
         [
             {
-                id: 'browse-task',
-                title: 'Browse Task',
-                subtitle: 'Custom made application designs',
+                id: 'search-task',
+                title: 'Search Task',
                 type: 'basic',
                 icon: 'heroicons_outline:search',
-                link: '/browse-task',
+                link: '/search-task',
             },
             {
                 id: 'post-task',
-                title: 'Issue Task',
+                title: 'New Task',
                 type: 'basic',
                 icon: 'heroicons_outline:plus-circle',
-                link: '/post-task',
+                link: '/new-task',
+            },
+            {
+                id: 'me',
+                title: 'Me',
+                type: 'basic',
+                icon: 'heroicons_outline:home',
+                link: '/me',
             }
         ],
     horizontal:
         [
             {
-                id: 'browse-task',
-                title: 'Browse Task',
+                id: 'search-task',
+                title: 'Search Task',
                 type: 'basic',
                 icon: 'heroicons_outline:search',
-                link: '/browse-task'
+                link: '/search-task'
             },
             {
                 id: 'post-task',
-                title: 'Issue Task',
+                title: 'New Task',
                 type: 'basic',
                 icon: 'heroicons_outline:plus-circle',
-                link: '/post-task',
+                link: '/new-task',
             },
+            {
+                id: 'me',
+                title: 'Me',
+                type: 'basic',
+                icon: 'heroicons_outline:home',
+                link: '/me',
+            }
         ]
 };

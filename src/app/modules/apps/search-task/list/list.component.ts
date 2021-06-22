@@ -12,8 +12,8 @@ import {MatSelectChange} from '@angular/material/select';
 import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {BehaviorSubject, combineLatest, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {TaskService} from 'app/modules/apps/browse-task/browse-task.service';
-import {Category, Task, Paginator} from 'app/modules/apps/browse-task/browse-task.types';
+import {TaskService} from 'app/modules/apps/search-task/browse-task.service';
+import {Category, Task, Paginator} from 'app/modules/apps/search-task/browse-task.types';
 
 @Component({
     selector: 'academy-list',

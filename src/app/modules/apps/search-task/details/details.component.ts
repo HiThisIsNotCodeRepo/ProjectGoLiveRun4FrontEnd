@@ -14,8 +14,8 @@ import {MatTabGroup} from '@angular/material/tabs';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
-import {Category, Task} from 'app/modules/apps/browse-task/browse-task.types';
-import {TaskService} from 'app/modules/apps/browse-task/browse-task.service';
+import {Category, Task} from 'app/modules/apps/search-task/browse-task.types';
+import {TaskService} from 'app/modules/apps/search-task/browse-task.service';
 
 @Component({
     selector: 'academy-details',

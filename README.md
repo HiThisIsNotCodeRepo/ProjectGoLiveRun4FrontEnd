@@ -17,6 +17,9 @@ To expediate front end developement, I have choosen a [template](https://themefo
 3. Task search.
 4. Task post.
 
+## Main Tech Stack
+**Angular**,**HTML**,**CSS**,**Javascript**,**Go**,**MySQL**,**Docker**,**Containerd**,**K8s**
+
 ## Document Link
 ### Git
 [git update](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/git/git.md)
