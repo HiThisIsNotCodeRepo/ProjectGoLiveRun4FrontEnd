@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectService
+export class MyInfoService
 {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -38,7 +38,7 @@ export class ProjectService
      */
     getData(): Observable<any>
     {
-        return this._httpClient.get('api/dashboards/dashboard').pipe(
+        return this._httpClient.get('api/dashboards/my-info').pipe(
             tap((response: any) => {
                 this._data.next(response);
             })

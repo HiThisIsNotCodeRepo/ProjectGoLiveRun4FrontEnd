@@ -23,11 +23,11 @@ export const naviData: Navigation = {
                 link: '/new-task',
             },
             {
-                id: 'me',
-                title: 'Me',
+                id: 'my-info',
+                title: 'My Info',
                 type: 'basic',
                 icon: 'heroicons_outline:home',
-                link: '/me',
+                link: '/my-info',
             }
         ],
     horizontal:
@@ -47,11 +47,11 @@ export const naviData: Navigation = {
                 link: '/new-task',
             },
             {
-                id: 'me',
-                title: 'Me',
+                id: 'my-info',
+                title: 'My Info',
                 type: 'basic',
                 icon: 'heroicons_outline:home',
-                link: '/me',
+                link: '/my-info',
             }
         ]
 };

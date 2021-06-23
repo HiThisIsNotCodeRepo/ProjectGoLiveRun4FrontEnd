@@ -1,6 +1,6 @@
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
+    ChangeDetectionStrategy, ChangeDetectorRef,
     Component,
     OnDestroy,
     OnInit,
@@ -8,22 +8,35 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Router} from '@angular/router';
-import {Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {ApexOptions} from 'ng-apexcharts';
-import {ProjectService} from './project.service';
+import {MyInfoService} from './my-info.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import {HttpClient} from '@angular/common/http';
+
+export interface SpendingCardResponse {
+    taskCount: number;
+    taskSpend: number;
+}
 
 @Component({
     selector: 'project',
-    templateUrl: './project.component.html',
+    templateUrl: './my-info.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
-
+export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    public buyNecessitySpend = 0;
+    public buyNecessityCount = 0;
+    public foodDeliverySpend = 0;
+    public foodDeliveryCount = 0;
+    public sendDocumentSpend = 0;
+    public sendDocumentCount = 0;
+    public otherSpend = 0;
+    public otherCount = 0;
     displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
     dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
@@ -38,12 +51,15 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     selectedProject: string = 'ACME Corp. Backend App';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+
     /**
      * Constructor
      */
     constructor(
-        private _projectService: ProjectService,
-        private _router: Router
+        private _projectService: MyInfoService,
+        private _router: Router,
+        private _httpClient: HttpClient,
+        private cd: ChangeDetectorRef
     ) {
     }
 
@@ -66,7 +82,26 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 // Prepare the chart data
                 this._prepareChartData();
             });
-
+        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/buy-necessity/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
+            this.buyNecessityCount = data.taskCount;
+            this.buyNecessitySpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/food-delivery/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
+            this.foodDeliveryCount = data.taskCount;
+            this.foodDeliverySpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/send-document/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
+            this.sendDocumentCount = data.taskCount;
+            this.sendDocumentSpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/other/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
+            this.otherCount = data.taskCount;
+            this.otherSpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
         // Attach SVG fill fixer to all ApexCharts
         window['Apex'] = {
             chart: {
@@ -93,6 +128,38 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
+    }
+
+    public updateBuyNecessityCard(url: string): void {
+        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/buy-necessity/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.buyNecessityCount = data.taskCount;
+            this.buyNecessitySpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+    }
+
+    public updateFoodDeliveryCard(url: string): void {
+        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/food-delivery/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.foodDeliveryCount = data.taskCount;
+            this.foodDeliverySpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+    }
+
+    public updateSendDocumentCard(url: string): void {
+        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/send-document/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.sendDocumentCount = data.taskCount;
+            this.sendDocumentSpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+    }
+
+    public updateOtherCard(url: string): void {
+        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/other/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.otherCount = data.taskCount;
+            this.otherSpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -444,6 +511,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         };
     }
+
+
 }
 
 export interface PeriodicElement {

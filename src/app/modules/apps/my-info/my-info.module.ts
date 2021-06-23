@@ -13,16 +13,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
-import {ProjectComponent} from './project.component';
-import {projectRoutes} from './project.routing';
+import {MyInfoComponent} from './my-info.component';
+import {myInfoRoutes} from './my-info.routing';
 import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
     declarations: [
-        ProjectComponent
+        MyInfoComponent
     ],
     imports: [
-        RouterModule.forChild(projectRoutes),
+        RouterModule.forChild(myInfoRoutes),
         MatButtonModule,
         MatButtonToggleModule,
         MatDividerModule,
@@ -39,6 +39,6 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         MatPaginatorModule
     ]
 })
-export class ProjectModule
+export class MyInfoModule
 {
 }
