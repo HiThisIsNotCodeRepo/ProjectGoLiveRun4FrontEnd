@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import {ProjectService} from './project.service';
+import {MyInfoService} from './my-info.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectResolver implements Resolve<any>
+export class MyInfoResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
-    constructor(private _projectService: ProjectService)
+    constructor(private _projectService: MyInfoService)
     {
     }
 

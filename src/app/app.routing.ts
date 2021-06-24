@@ -99,8 +99,8 @@ export const appRoutes: Route[] = [
         children: [
             // Apps
             {
-                path: 'me',
-                loadChildren: () => import('app/modules/apps/dashboard/project.module').then(m => m.ProjectModule)
+                path: 'my-info',
+                loadChildren: () => import('app/modules/apps/my-info/my-info.module').then(m => m.MyInfoModule)
             },
             {
                 path: 'search-task',
