@@ -8,9 +8,19 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Router} from '@angular/router';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {ApexOptions} from 'ng-apexcharts';
+import {
+    ChartComponent,
+    ApexAxisChartSeries,
+    ApexChart,
+    ApexFill,
+    ApexYAxis,
+    ApexTooltip,
+    ApexTitleSubtitle,
+    ApexXAxis,
+    ApexOptions
+} from 'ng-apexcharts';
 import {MyInfoService} from './my-info.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -21,6 +31,48 @@ export interface SpendingCardResponse {
     taskSpend: number;
 }
 
+export interface SpendingSummaryResponse {
+    lineData: number[];
+    columnData: number[];
+    totalTasks: number;
+    dollarSpent: number;
+    buyNecessity: number;
+    foodDelivery: number;
+    sendDocument: number;
+    other: number;
+}
+
+export interface SpendingTasksResponse {
+    tasks: Task[];
+}
+
+export interface Task {
+    no: number;
+    completeDateTime: string;
+    taskTitle: string;
+    taskCategoryId: number;
+    taskFrom: string;
+    taskTo: string;
+    taskDeliverRate: number;
+}
+
+export type ChartOptions = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    yaxis: ApexYAxis | ApexYAxis[];
+    title: ApexTitleSubtitle;
+    labels: string[];
+    stroke: any; // ApexStroke;
+    dataLabels: any; // ApexDataLabels;
+    fill: ApexFill;
+    tooltip: ApexTooltip;
+};
+export const BASE_URL = 'http://localhost:5000/api/v1';
+export const DATE_ARRAY = ['/spending/yesterday', '/spending/two-days-ago', '/spending/three-days-ago', '/spending/last-week', '/spending/this-week'];
+export const CATEGORY_ARRAY = ['/buy-necessity', '/food-delivery', '/send-document', '/other'];
+export const DATE_ARRAY_SUMMARY = ['/spending/this-week', '/spending/last-week'];
+
 @Component({
     selector: 'project',
     templateUrl: './my-info.component.html',
@@ -29,26 +81,35 @@ export interface SpendingCardResponse {
 })
 export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    public buyNecessitySpend = 0;
-    public buyNecessityCount = 0;
-    public foodDeliverySpend = 0;
-    public foodDeliveryCount = 0;
-    public sendDocumentSpend = 0;
-    public sendDocumentCount = 0;
-    public otherSpend = 0;
-    public otherCount = 0;
-    displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-    dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+    public chartOptions: Partial<ChartOptions>;
+    public buyNecessitySpend;
+    public buyNecessityCount;
+    public foodDeliverySpend;
+    public foodDeliveryCount;
+    public sendDocumentSpend;
+    public sendDocumentCount;
+    public otherSpend;
+    public otherCount;
+    public totalTasks;
+    public dollarSpent;
+    public buyNecessityWeeklyCount;
+    public foodDeliveryWeeklyCount;
+    public sendDocumentWeeklyCount;
+    public otherWeeklyCount;
+    public spendingTasks: Task[];
+    displayedColumns: string[] = ['no', 'title', 'category', 'from','to','rate'];
+    dataSource = new MatTableDataSource<Task>();
 
 
-    chartGithubIssues: ApexOptions = {};
-    chartTaskDistribution: ApexOptions = {};
     chartBudgetDistribution: ApexOptions = {};
     chartWeeklyExpenses: ApexOptions = {};
     chartMonthlyExpenses: ApexOptions = {};
     chartYearlyExpenses: ApexOptions = {};
-    data: any;
-    selectedProject: string = 'ACME Corp. Backend App';
+    storeData: any;
+    chartConfig: ApexOptions = {};
+    series: any;
+
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
 
@@ -61,6 +122,59 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
         private _httpClient: HttpClient,
         private cd: ChangeDetectorRef
     ) {
+        this.chartOptions = {
+            series: [
+                {
+                    name: 'Task Qty',
+                    type: 'column',
+                    data: [440, 505, 414, 671, 227, 413, 201]
+                },
+                {
+                    name: 'Expense',
+                    type: 'line',
+                    data: [23, 42, 35, 27, 43, 22, 17]
+                }
+            ],
+            chart: {
+                height: 350,
+                type: 'line'
+            },
+            stroke: {
+                width: [0, 4]
+            },
+            title: {
+                text: 'Task Spend vs. Task Qty'
+            },
+            dataLabels: {
+                enabled: true,
+                enabledOnSeries: [1]
+            },
+            labels: [
+                'Mon',
+                'Tue',
+                'Wed',
+                'Thur',
+                'Fri',
+                'Sat',
+                'Sun'
+            ],
+            xaxis: {
+                type: 'category'
+            },
+            yaxis: [
+                {
+                    title: {
+                        text: 'Task Qty'
+                    }
+                },
+                {
+                    opposite: true,
+                    title: {
+                        text: 'Expense'
+                    }
+                }
+            ]
+        };
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -71,37 +185,69 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
+
+
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.buyNecessityCount = data.taskCount;
+            this.buyNecessitySpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.foodDeliveryCount = data.taskCount;
+            this.foodDeliverySpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.sendDocumentCount = data.taskCount;
+            this.sendDocumentSpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            this.otherCount = data.taskCount;
+            this.otherSpend = data.taskSpend;
+            this.cd.markForCheck();
+        });
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe(
+            (data) => {
+                console.log(data);
+                this.totalTasks = data.totalTasks;
+                this.dollarSpent = data.dollarSpent;
+                this.buyNecessityWeeklyCount = data.buyNecessity;
+                this.foodDeliveryWeeklyCount = data.foodDelivery;
+                this.sendDocumentWeeklyCount = data.sendDocument;
+                this.otherWeeklyCount = data.other;
+                this.chartOptions.series = [
+                    {
+                        name: 'Task Qty',
+                        type: 'column',
+                        data: data.columnData
+                    },
+                    {
+                        name: 'Expense',
+                        type: 'line',
+                        data: data.lineData
+                    }
+                ];
+                this.cd.markForCheck();
+            }
+        );
+        this._httpClient.get<SpendingTasksResponse>(`${BASE_URL}/spending/tasks/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe(
+            (data) => {
+                this.spendingTasks = data.tasks;
+                this.dataSource.data = data.tasks;
+                this.cd.markForCheck();
+            }
+        );
         // Get the data
         this._projectService.data$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data) => {
 
                 // Store the data
-                this.data = data;
-
+                this.storeData = data;
                 // Prepare the chart data
                 this._prepareChartData();
             });
-        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/buy-necessity/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
-            this.buyNecessityCount = data.taskCount;
-            this.buyNecessitySpend = data.taskSpend;
-            this.cd.markForCheck();
-        });
-        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/food-delivery/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
-            this.foodDeliveryCount = data.taskCount;
-            this.foodDeliverySpend = data.taskSpend;
-            this.cd.markForCheck();
-        });
-        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/send-document/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
-            this.sendDocumentCount = data.taskCount;
-            this.sendDocumentSpend = data.taskSpend;
-            this.cd.markForCheck();
-        });
-        this._httpClient.get<SpendingCardResponse>('http://localhost:5000/api/v1/spending/other/yesterday/61fe8602-af10-435c-b5e1-224f88a9aa61').subscribe((data) => {
-            this.otherCount = data.taskCount;
-            this.otherSpend = data.taskSpend;
-            this.cd.markForCheck();
-        });
         // Attach SVG fill fixer to all ApexCharts
         window['Apex'] = {
             chart: {
@@ -130,34 +276,46 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dataSource.paginator = this.paginator;
     }
 
-    public updateBuyNecessityCard(url: string): void {
-        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/buy-necessity/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
-            this.buyNecessityCount = data.taskCount;
-            this.buyNecessitySpend = data.taskSpend;
+    public updateCard(dateIndex: number, categoryIndex: number): void {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            if (categoryIndex === 0) {
+                this.buyNecessityCount = data.taskCount;
+                this.buyNecessitySpend = data.taskSpend;
+            } else if (categoryIndex === 1) {
+                this.foodDeliveryCount = data.taskCount;
+                this.foodDeliverySpend = data.taskSpend;
+            } else if (categoryIndex === 2) {
+                this.sendDocumentCount = data.taskCount;
+                this.sendDocumentSpend = data.taskSpend;
+            } else if (categoryIndex === 3) {
+                this.otherCount = data.taskCount;
+                this.otherSpend = data.taskSpend;
+            }
             this.cd.markForCheck();
         });
     }
 
-    public updateFoodDeliveryCard(url: string): void {
-        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/food-delivery/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
-            this.foodDeliveryCount = data.taskCount;
-            this.foodDeliverySpend = data.taskSpend;
-            this.cd.markForCheck();
-        });
-    }
-
-    public updateSendDocumentCard(url: string): void {
-        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/send-document/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
-            this.sendDocumentCount = data.taskCount;
-            this.sendDocumentSpend = data.taskSpend;
-            this.cd.markForCheck();
-        });
-    }
-
-    public updateOtherCard(url: string): void {
-        this._httpClient.get<SpendingCardResponse>(`http://localhost:5000/api/v1/spending/other/${url}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
-            this.otherCount = data.taskCount;
-            this.otherSpend = data.taskSpend;
+    public updateSummary(dateIndex: number): void {
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+            console.log(data);
+            this.totalTasks = data.totalTasks;
+            this.dollarSpent = data.dollarSpent;
+            this.buyNecessityWeeklyCount = data.buyNecessity;
+            this.foodDeliveryWeeklyCount = data.foodDelivery;
+            this.sendDocumentWeeklyCount = data.sendDocument;
+            this.otherWeeklyCount = data.other;
+            this.chartOptions.series = [
+                {
+                    name: 'Task Qty',
+                    type: 'column',
+                    data: data.columnData
+                },
+                {
+                    name: 'Expense',
+                    type: 'line',
+                    data: data.lineData
+                }
+            ];
             this.cd.markForCheck();
         });
     }
@@ -211,142 +369,6 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
      * @private
      */
     private _prepareChartData(): void {
-        // Github issues
-        this.chartGithubIssues = {
-            chart: {
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                toolbar: {
-                    show: false
-                },
-                zoom: {
-                    enabled: false
-                }
-            },
-            colors: ['#64748B', '#94A3B8'],
-            dataLabels: {
-                enabled: true,
-                enabledOnSeries: [0],
-                background: {
-                    borderWidth: 0
-                }
-            },
-            grid: {
-                borderColor: 'var(--fuse-border)'
-            },
-            labels: this.data.githubIssues.labels,
-            legend: {
-                show: false
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth: '50%'
-                }
-            },
-            series: this.data.githubIssues.series,
-            states: {
-                hover: {
-                    filter: {
-                        type: 'darken',
-                        value: 0.75
-                    }
-                }
-            },
-            stroke: {
-                width: [3, 0]
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark'
-            },
-            xaxis: {
-                axisBorder: {
-                    show: false
-                },
-                axisTicks: {
-                    color: 'var(--fuse-border)'
-                },
-                labels: {
-                    style: {
-                        colors: 'var(--fuse-text-secondary)'
-                    }
-                },
-                tooltip: {
-                    enabled: false
-                }
-            },
-            yaxis: {
-                labels: {
-                    offsetX: -16,
-                    style: {
-                        colors: 'var(--fuse-text-secondary)'
-                    }
-                }
-            }
-        };
-
-        // Task distribution
-        this.chartTaskDistribution = {
-            chart: {
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'polarArea',
-                toolbar: {
-                    show: false
-                },
-                zoom: {
-                    enabled: false
-                }
-            },
-            labels: this.data.taskDistribution.labels,
-            legend: {
-                position: 'bottom'
-            },
-            plotOptions: {
-                polarArea: {
-                    spokes: {
-                        connectorColors: 'var(--fuse-border)'
-                    },
-                    rings: {
-                        strokeColor: 'var(--fuse-border)'
-                    }
-                }
-            },
-            series: this.data.taskDistribution.series,
-            states: {
-                hover: {
-                    filter: {
-                        type: 'darken',
-                        value: 0.75
-                    }
-                }
-            },
-            stroke: {
-                width: 2
-            },
-            theme: {
-                monochrome: {
-                    enabled: true,
-                    color: '#93C5FD',
-                    shadeIntensity: 0.75,
-                    shadeTo: 'dark'
-                }
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark'
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: 'var(--fuse-text-secondary)'
-                    }
-                }
-            }
-        };
 
         // Budget distribution
         this.chartBudgetDistribution = {
@@ -386,7 +408,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 }
             },
-            series: this.data.budgetDistribution.series,
+            series: this.storeData.budgetDistribution.series,
             stroke: {
                 width: 2
             },
@@ -404,7 +426,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                         fontWeight: '500'
                     }
                 },
-                categories: this.data.budgetDistribution.categories
+                categories: this.storeData.budgetDistribution.categories
             },
             yaxis: {
                 max: (max: number): number => parseInt((max + 10).toFixed(0), 10),
@@ -427,7 +449,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             },
             colors: ['#22D3EE'],
-            series: this.data.weeklyExpenses.series,
+            series: this.storeData.weeklyExpenses.series,
             stroke: {
                 curve: 'smooth'
             },
@@ -436,7 +458,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             xaxis: {
                 type: 'category',
-                categories: this.data.weeklyExpenses.labels
+                categories: this.storeData.weeklyExpenses.labels
             },
             yaxis: {
                 labels: {
@@ -460,7 +482,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             },
             colors: ['#4ADE80'],
-            series: this.data.monthlyExpenses.series,
+            series: this.storeData.monthlyExpenses.series,
             stroke: {
                 curve: 'smooth'
             },
@@ -469,7 +491,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             xaxis: {
                 type: 'category',
-                categories: this.data.monthlyExpenses.labels
+                categories: this.storeData.monthlyExpenses.labels
             },
             yaxis: {
                 labels: {
@@ -493,7 +515,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             },
             colors: ['#FB7185'],
-            series: this.data.yearlyExpenses.series,
+            series: this.storeData.yearlyExpenses.series,
             stroke: {
                 curve: 'smooth'
             },
@@ -502,7 +524,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             xaxis: {
                 type: 'category',
-                categories: this.data.yearlyExpenses.labels
+                categories: this.storeData.yearlyExpenses.labels
             },
             yaxis: {
                 labels: {

@@ -66,76 +66,6 @@ export const project = {
             'last-week': [19, 16, 42, 23]
         }
     },
-    schedule: {
-        today: [
-            {
-                title: 'Group Meeting',
-                time: 'in 32 minutes',
-                location: 'Conference room 1B'
-            },
-            {
-                title: 'Coffee Break',
-                time: '10:30 AM'
-            },
-            {
-                title: 'Public Beta Release',
-                time: '11:00 AM'
-            },
-            {
-                title: 'Lunch',
-                time: '12:10 PM'
-            },
-            {
-                title: 'Dinner with David',
-                time: '05:30 PM',
-                location: 'Magnolia'
-            },
-            {
-                title: 'Jane\'s Birthday Party',
-                time: '07:30 PM',
-                location: 'Home'
-            },
-            {
-                title: 'Overseer\'s Retirement Party',
-                time: '09:30 PM',
-                location: 'Overseer\'s room'
-            }
-        ],
-        tomorrow: [
-            {
-                title: 'Marketing Meeting',
-                time: '09:00 AM',
-                location: 'Conference room 1A'
-            },
-            {
-                title: 'Public Announcement',
-                time: '11:00 AM'
-            },
-            {
-                title: 'Lunch',
-                time: '12:10 PM'
-            },
-            {
-                title: 'Meeting with Beta Testers',
-                time: '03:00 PM',
-                location: 'Conference room 2C'
-            },
-            {
-                title: 'Live Stream',
-                time: '05:30 PM'
-            },
-            {
-                title: 'Release Party',
-                time: '07:30 PM',
-                location: 'CEO\'s house'
-            },
-            {
-                title: 'CEO\'s Private Party',
-                time: '09:30 PM',
-                location: 'CEO\'s Penthouse'
-            }
-        ]
-    },
     budgetDistribution: {
         categories: ['Buy Necessity', 'Food Delivery', 'Send Document', 'Other'],
         series: [
@@ -148,48 +78,45 @@ export const project = {
     weeklyExpenses: {
         amount: 17663,
         labels: [
-            moment().subtract(47, 'days').format('DD MMM') + ' - ' + moment().subtract(40, 'days').format('DD MMM'),
-            moment().subtract(39, 'days').format('DD MMM') + ' - ' + moment().subtract(32, 'days').format('DD MMM'),
-            moment().subtract(31, 'days').format('DD MMM') + ' - ' + moment().subtract(24, 'days').format('DD MMM'),
-            moment().subtract(23, 'days').format('DD MMM') + ' - ' + moment().subtract(16, 'days').format('DD MMM'),
-            moment().subtract(15, 'days').format('DD MMM') + ' - ' + moment().subtract(8, 'days').format('DD MMM'),
-            moment().subtract(7, 'days').format('DD MMM') + ' - ' + moment().format('DD MMM')
+            moment().subtract(2, 'days').format('DD MMM'),
+            moment().subtract(1, 'days').format('DD MMM')
         ],
         series: [
             {
                 name: 'Expenses',
-                data: [4412, 4345, 4541, 4677, 4322, 4123]
+                data: [4412, 4345]
             }
         ]
     },
     monthlyExpenses: {
         amount: 54663,
         labels: [
-            moment().subtract(31, 'days').format('DD MMM') + ' - ' + moment().subtract(24, 'days').format('DD MMM'),
-            moment().subtract(23, 'days').format('DD MMM') + ' - ' + moment().subtract(16, 'days').format('DD MMM'),
-            moment().subtract(15, 'days').format('DD MMM') + ' - ' + moment().subtract(8, 'days').format('DD MMM'),
-            moment().subtract(7, 'days').format('DD MMM') + ' - ' + moment().format('DD MMM')
+            moment().subtract(5, 'days').format('DD MMM'),
+            moment().subtract(4, 'days').format('DD MMM'),
+            moment().subtract(3, 'days').format('DD MMM'),
+            moment().subtract(2, 'days').format('DD MMM'),
+            moment().subtract(1, 'days').format('DD MMM')
         ],
         series: [
             {
                 name: 'Expenses',
-                data: [15521, 15519, 15522, 15521]
+                data: [15521, 15519, 15522, 15521, 15500]
             }
         ]
     },
     yearlyExpenses: {
         amount: 648813,
         labels: [
-            moment().subtract(79, 'days').format('DD MMM') + ' - ' + moment().subtract(72, 'days').format('DD MMM'),
-            moment().subtract(71, 'days').format('DD MMM') + ' - ' + moment().subtract(64, 'days').format('DD MMM'),
-            moment().subtract(63, 'days').format('DD MMM') + ' - ' + moment().subtract(56, 'days').format('DD MMM'),
-            moment().subtract(55, 'days').format('DD MMM') + ' - ' + moment().subtract(48, 'days').format('DD MMM'),
-            moment().subtract(47, 'days').format('DD MMM') + ' - ' + moment().subtract(40, 'days').format('DD MMM'),
-            moment().subtract(39, 'days').format('DD MMM') + ' - ' + moment().subtract(32, 'days').format('DD MMM'),
-            moment().subtract(31, 'days').format('DD MMM') + ' - ' + moment().subtract(24, 'days').format('DD MMM'),
-            moment().subtract(23, 'days').format('DD MMM') + ' - ' + moment().subtract(16, 'days').format('DD MMM'),
-            moment().subtract(15, 'days').format('DD MMM') + ' - ' + moment().subtract(8, 'days').format('DD MMM'),
-            moment().subtract(7, 'days').format('DD MMM') + ' - ' + moment().format('DD MMM')
+            moment().subtract(10, 'days').format('DD MMM'),
+            moment().subtract(9, 'days').format('DD MMM'),
+            moment().subtract(8, 'days').format('DD MMM'),
+            moment().subtract(7, 'days').format('DD MMM'),
+            moment().subtract(6, 'days').format('DD MMM'),
+            moment().subtract(5, 'days').format('DD MMM'),
+            moment().subtract(4, 'days').format('DD MMM'),
+            moment().subtract(3, 'days').format('DD MMM'),
+            moment().subtract(2, 'days').format('DD MMM'),
+            moment().subtract(1, 'days').format('DD MMM')
         ],
         series: [
             {
