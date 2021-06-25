@@ -9,22 +9,17 @@ import {
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {
-    ChartComponent,
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexFill,
-    ApexYAxis,
-    ApexTooltip,
-    ApexTitleSubtitle,
-    ApexXAxis,
-    ApexOptions
-} from 'ng-apexcharts';
-import {MyInfoService} from './my-info.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {HttpClient} from '@angular/common/http';
+import moment from 'moment';
+import {
+    ChartOptions,
+    PastFiveDaysEarning,
+    PastTenDaysEarning,
+    PastTwoDaysEarning,
+    RadarChartOptions
+} from './chartOptions';
 
 export interface SpendingCardResponse {
     taskCount: number;
@@ -42,7 +37,7 @@ export interface SpendingSummaryResponse {
     other: number;
 }
 
-export interface SpendingTasksResponse {
+export interface DataSourceResponse {
     tasks: Task[];
 }
 
@@ -51,27 +46,34 @@ export interface Task {
     completeDateTime: string;
     taskTitle: string;
     taskCategoryId: number;
+    taskOwnerId: string;
+    taskDeliveredId: string;
     taskFrom: string;
     taskTo: string;
     taskDeliverRate: number;
 }
 
-export type ChartOptions = {
-    series: ApexAxisChartSeries;
-    chart: ApexChart;
-    xaxis: ApexXAxis;
-    yaxis: ApexYAxis | ApexYAxis[];
-    title: ApexTitleSubtitle;
-    labels: string[];
-    stroke: any; // ApexStroke;
-    dataLabels: any; // ApexDataLabels;
-    fill: ApexFill;
-    tooltip: ApexTooltip;
-};
+export interface EarningCardResponse {
+    pastTwoDaysTotal: number;
+    pastFiveDaysTotal: number;
+    pastTenDaysTotal: number;
+    pastTwoDays: number[];
+    pastFiveDays: number[];
+    pastTenDays: number[];
+}
+
+export interface EarningRadarResponse {
+    buyNecessity: number;
+    foodDelivery: number;
+    sendDocument: number;
+    other: number;
+}
+
 export const BASE_URL = 'http://localhost:5000/api/v1';
 export const DATE_ARRAY = ['/spending/yesterday', '/spending/two-days-ago', '/spending/three-days-ago', '/spending/last-week', '/spending/this-week'];
 export const CATEGORY_ARRAY = ['/buy-necessity', '/food-delivery', '/send-document', '/other'];
 export const DATE_ARRAY_SUMMARY = ['/spending/this-week', '/spending/last-week'];
+export const RADAR_DATE_ARRAY = ['/earning/radar/this-week', '/earning/radar/last-week'];
 
 @Component({
     selector: 'project',
@@ -81,7 +83,11 @@ export const DATE_ARRAY_SUMMARY = ['/spending/this-week', '/spending/last-week']
 })
 export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    public chartOptions: Partial<ChartOptions>;
+    public spendingTaskSummaryChartOptions: Partial<ChartOptions>;
+    public earningRadarChartOptions: Partial<RadarChartOptions>;
+    public earningPastTowDaysChartOptions: Partial<PastTwoDaysEarning>;
+    public earningPastFiveDaysChartOptions: Partial<PastFiveDaysEarning>;
+    public earningPastTenDaysChartOptions: Partial<PastTenDaysEarning>;
     public buyNecessitySpend;
     public buyNecessityCount;
     public foodDeliverySpend;
@@ -96,20 +102,12 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     public foodDeliveryWeeklyCount;
     public sendDocumentWeeklyCount;
     public otherWeeklyCount;
-    public spendingTasks: Task[];
-    displayedColumns: string[] = ['no', 'title', 'category', 'from','to','rate'];
-    dataSource = new MatTableDataSource<Task>();
-
-
-    chartBudgetDistribution: ApexOptions = {};
-    chartWeeklyExpenses: ApexOptions = {};
-    chartMonthlyExpenses: ApexOptions = {};
-    chartYearlyExpenses: ApexOptions = {};
-    storeData: any;
-    chartConfig: ApexOptions = {};
-    series: any;
-
-
+    public earningPastTwoDaysTotal;
+    public earningPastFiveDaysTotal;
+    public earningPastTenDaysTotal;
+    displayedColumns: string[] = ['no', 'title', 'complete', 'category', 'owner', 'deliver', 'from', 'to', 'rate'];
+    spendingDataSource = new MatTableDataSource<Task>();
+    earningDataSource = new MatTableDataSource<Task>();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
 
@@ -117,12 +115,11 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
      * Constructor
      */
     constructor(
-        private _projectService: MyInfoService,
         private _router: Router,
         private _httpClient: HttpClient,
         private cd: ChangeDetectorRef
     ) {
-        this.chartOptions = {
+        this.spendingTaskSummaryChartOptions = {
             series: [
                 {
                     name: 'Task Qty',
@@ -141,9 +138,6 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             stroke: {
                 width: [0, 4]
-            },
-            title: {
-                text: 'Task Spend vs. Task Qty'
             },
             dataLabels: {
                 enabled: true,
@@ -175,6 +169,192 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             ]
         };
+
+        this.earningRadarChartOptions = {
+            series: [
+                {
+                    name: 'Earning',
+                    data: [20, 100, 40, 30]
+                }
+            ],
+            chart: {
+                height: 350,
+                type: 'radar'
+            },
+            dataLabels: {
+                enabled: true
+            },
+            plotOptions: {
+                radar: {
+                    size: 140,
+                    polygons: {
+                        fill: {
+                            colors: ['#f8f8f8', '#fff']
+                        }
+                    }
+                }
+            },
+            colors: ['#FF4560'],
+            markers: {
+                size: 6,
+                colors: ['#fff'],
+                strokeColors: ['#FF4560'],
+                strokeWidth: 5
+            },
+            tooltip: {
+                y: {
+                    formatter: (val): string => `$${val}`
+                }
+            },
+            xaxis: {
+                categories: [
+                    'Buy Necessity',
+                    'Food Delivery',
+                    'Send Document',
+                    'Other'
+                ]
+            },
+            yaxis: {
+                tickAmount: 7,
+                labels: {
+                    formatter: (val, i): string => {
+                        if (i % 2 === 0) {
+                            return val + '';
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+            }
+        };
+        this.earningPastTowDaysChartOptions = {
+            chart: {
+                animations: {
+                    enabled: false
+                },
+                fontFamily: 'inherit',
+                foreColor: 'inherit',
+                height: '100%',
+                type: 'line',
+                sparkline: {
+                    enabled: true
+                }
+            },
+            colors: ['#22D3EE'],
+            series: [
+                {
+                    name: 'Expenses',
+                    data: [4412, 4466]
+                }
+            ],
+            stroke: {
+                curve: 'smooth'
+            },
+            tooltip: {
+                theme: 'dark'
+            },
+            xaxis: {
+                type: 'category',
+                categories: [
+                    moment().subtract(2, 'days').format('DD MMM'),
+                    moment().subtract(1, 'days').format('DD MMM')
+                ]
+            },
+            yaxis: {
+                labels: {
+                    formatter: (val): string => `$${val}`
+                }
+            }
+        };
+        this.earningPastFiveDaysChartOptions = {
+            chart: {
+                animations: {
+                    enabled: false
+                },
+                fontFamily: 'inherit',
+                foreColor: 'inherit',
+                height: '100%',
+                type: 'line',
+                sparkline: {
+                    enabled: true
+                }
+            },
+            colors: ['#4ADE80'],
+            series: [
+                {
+                    name: 'Expenses',
+                    data: [15521, 15519, 15522, 15521, 18000]
+                }
+            ],
+            stroke: {
+                curve: 'smooth'
+            },
+            tooltip: {
+                theme: 'dark'
+            },
+            xaxis: {
+                type: 'category',
+                categories: [
+                    moment().subtract(5, 'days').format('DD MMM'),
+                    moment().subtract(4, 'days').format('DD MMM'),
+                    moment().subtract(3, 'days').format('DD MMM'),
+                    moment().subtract(2, 'days').format('DD MMM'),
+                    moment().subtract(1, 'days').format('DD MMM')
+                ]
+            },
+            yaxis: {
+                labels: {
+                    formatter: (val): string => `$${val}`
+                }
+            }
+        };
+        this.earningPastTenDaysChartOptions = {
+            chart: {
+                animations: {
+                    enabled: false
+                },
+                fontFamily: 'inherit',
+                foreColor: 'inherit',
+                height: '100%',
+                type: 'line',
+                sparkline: {
+                    enabled: true
+                }
+            },
+            colors: ['#FB7185'],
+            series: [
+                {
+                    name: 'Expenses',
+                    data: [45891, 45801, 45834, 45843, 45800, 45900, 45814, 45856, 45910, 45849]
+                }
+            ],
+            stroke: {
+                curve: 'smooth'
+            },
+            tooltip: {
+                theme: 'dark'
+            },
+            xaxis: {
+                type: 'category',
+                categories: [
+                    moment().subtract(10, 'days').format('DD MMM'),
+                    moment().subtract(9, 'days').format('DD MMM'),
+                    moment().subtract(8, 'days').format('DD MMM'),
+                    moment().subtract(7, 'days').format('DD MMM'),
+                    moment().subtract(6, 'days').format('DD MMM'),
+                    moment().subtract(5, 'days').format('DD MMM'),
+                    moment().subtract(4, 'days').format('DD MMM'),
+                    moment().subtract(3, 'days').format('DD MMM'),
+                    moment().subtract(2, 'days').format('DD MMM'),
+                    moment().subtract(1, 'days').format('DD MMM')
+                ]
+            },
+            yaxis: {
+                labels: {
+                    formatter: (val): string => `$${val}`
+                }
+            }
+        };
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -187,27 +367,27 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
 
 
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
             this.buyNecessityCount = data.taskCount;
             this.buyNecessitySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
             this.foodDeliveryCount = data.taskCount;
             this.foodDeliverySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
             this.sendDocumentCount = data.taskCount;
             this.sendDocumentSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
             this.otherCount = data.taskCount;
             this.otherSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe(
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
             (data) => {
                 console.log(data);
                 this.totalTasks = data.totalTasks;
@@ -216,7 +396,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.foodDeliveryWeeklyCount = data.foodDelivery;
                 this.sendDocumentWeeklyCount = data.sendDocument;
                 this.otherWeeklyCount = data.other;
-                this.chartOptions.series = [
+                this.spendingTaskSummaryChartOptions.series = [
                     {
                         name: 'Task Qty',
                         type: 'column',
@@ -231,23 +411,15 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.cd.markForCheck();
             }
         );
-        this._httpClient.get<SpendingTasksResponse>(`${BASE_URL}/spending/tasks/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe(
+        this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
             (data) => {
-                this.spendingTasks = data.tasks;
-                this.dataSource.data = data.tasks;
+                this.spendingDataSource.data = data.tasks;
                 this.cd.markForCheck();
             }
         );
-        // Get the data
-        this._projectService.data$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((data) => {
 
-                // Store the data
-                this.storeData = data;
-                // Prepare the chart data
-                this._prepareChartData();
-            });
+        // Get the data
+
         // Attach SVG fill fixer to all ApexCharts
         window['Apex'] = {
             chart: {
@@ -263,6 +435,65 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
         };
     }
 
+    public tabChange(evt: any): void {
+        console.log(evt);
+        if (evt === 0) {
+            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+                (data) => {
+                    this.spendingDataSource.data = data.tasks;
+                    this.spendingDataSource.paginator = this.paginator;
+                }
+            );
+        } else if (evt === 1) {
+            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/earning/tasks/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+                (data) => {
+                    this.earningDataSource.data = data.tasks;
+                    this.earningDataSource.paginator = this.paginator;
+                }
+            );
+            this._httpClient.get<EarningCardResponse>(`${BASE_URL}/earning/past-days/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+                (data) => {
+                    this.earningPastTwoDaysTotal = data.pastTwoDaysTotal;
+                    this.earningPastFiveDaysTotal = data.pastFiveDaysTotal;
+                    this.earningPastTenDaysTotal = data.pastTenDaysTotal;
+                    this.earningPastTowDaysChartOptions.series = [
+                        {
+                            name: 'Expenses',
+                            data: data.pastTwoDays
+                        }
+                    ];
+                    this.earningPastFiveDaysChartOptions.series = [
+                        {
+                            name: 'Expenses',
+                            data: data.pastFiveDays
+                        }
+                    ];
+                    this.earningPastTenDaysChartOptions.series = [
+                        {
+                            name: 'Expenses',
+                            data: data.pastTenDays
+                        }
+                    ];
+                    this.cd.markForCheck();
+                    console.log(data);
+                }
+            );
+            this._httpClient.get<EarningRadarResponse>(`${BASE_URL}/earning/radar/this-week/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+                (data) => {
+                    this.earningRadarChartOptions.series = [
+                        {
+                            name: 'Earning',
+                            data: [data.buyNecessity, data.foodDelivery, data.sendDocument, data.other]
+                        }
+                    ];
+                    this.cd.markForCheck();
+                    console.log(data);
+                }
+            );
+        }
+
+    }
+
     /**
      * On destroy
      */
@@ -273,11 +504,11 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.dataSource.paginator = this.paginator;
+        this.spendingDataSource.paginator = this.paginator;
     }
 
     public updateCard(dateIndex: number, categoryIndex: number): void {
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
             if (categoryIndex === 0) {
                 this.buyNecessityCount = data.taskCount;
                 this.buyNecessitySpend = data.taskSpend;
@@ -296,7 +527,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateSummary(dateIndex: number): void {
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
             console.log(data);
             this.totalTasks = data.totalTasks;
             this.dollarSpent = data.dollarSpent;
@@ -304,7 +535,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             this.foodDeliveryWeeklyCount = data.foodDelivery;
             this.sendDocumentWeeklyCount = data.sendDocument;
             this.otherWeeklyCount = data.other;
-            this.chartOptions.series = [
+            this.spendingTaskSummaryChartOptions.series = [
                 {
                     name: 'Task Qty',
                     type: 'column',
@@ -319,6 +550,21 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             this.cd.markForCheck();
         });
     }
+
+    public updateRadar(dateIndex: number): void {
+        this._httpClient.get<EarningRadarResponse>(`${BASE_URL}${RADAR_DATE_ARRAY[dateIndex]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+            (data) => {
+                this.earningRadarChartOptions.series = [
+                    {
+                        name: 'Earning',
+                        data: [data.buyNecessity, data.foodDelivery, data.sendDocument, data.other]
+                    }
+                ];
+                this.cd.markForCheck();
+            }
+        );
+    }
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
@@ -359,210 +605,13 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
             .filter(el => el.getAttribute('fill').indexOf('url(') !== -1)
             .forEach((el) => {
                 const attrVal = el.getAttribute('fill');
-                el.setAttribute('fill', `url(${currentURL}${attrVal.slice(attrVal.indexOf('#'))}`);
+                el.setAttribute('fill', `
+
+    url(${currentURL}${attrVal.slice(attrVal.indexOf('#'))}
+
+`);
             });
     }
 
-    /**
-     * Prepare the chart data from the data
-     *
-     * @private
-     */
-    private _prepareChartData(): void {
-
-        // Budget distribution
-        this.chartBudgetDistribution = {
-            chart: {
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'radar',
-                sparkline: {
-                    enabled: true
-                }
-            },
-            colors: ['#818CF8'],
-            dataLabels: {
-                enabled: true,
-                formatter: (val: number): string | number => `${val}%`,
-                textAnchor: 'start',
-                style: {
-                    fontSize: '13px',
-                    fontWeight: 500
-                },
-                background: {
-                    borderWidth: 0,
-                    padding: 4
-                },
-                offsetY: -15
-            },
-            markers: {
-                strokeColors: '#818CF8',
-                strokeWidth: 4
-            },
-            plotOptions: {
-                radar: {
-                    polygons: {
-                        strokeColors: 'var(--fuse-border)',
-                        connectorColors: 'var(--fuse-border)'
-                    }
-                }
-            },
-            series: this.storeData.budgetDistribution.series,
-            stroke: {
-                width: 2
-            },
-            tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: (val: number): string => `${val}%`
-                }
-            },
-            xaxis: {
-                labels: {
-                    show: true,
-                    style: {
-                        fontSize: '12px',
-                        fontWeight: '500'
-                    }
-                },
-                categories: this.storeData.budgetDistribution.categories
-            },
-            yaxis: {
-                max: (max: number): number => parseInt((max + 10).toFixed(0), 10),
-                tickAmount: 7
-            }
-        };
-
-        // Weekly expenses
-        this.chartWeeklyExpenses = {
-            chart: {
-                animations: {
-                    enabled: false
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                sparkline: {
-                    enabled: true
-                }
-            },
-            colors: ['#22D3EE'],
-            series: this.storeData.weeklyExpenses.series,
-            stroke: {
-                curve: 'smooth'
-            },
-            tooltip: {
-                theme: 'dark'
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.storeData.weeklyExpenses.labels
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => `$${val}`
-                }
-            }
-        };
-
-        // Monthly expenses
-        this.chartMonthlyExpenses = {
-            chart: {
-                animations: {
-                    enabled: false
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                sparkline: {
-                    enabled: true
-                }
-            },
-            colors: ['#4ADE80'],
-            series: this.storeData.monthlyExpenses.series,
-            stroke: {
-                curve: 'smooth'
-            },
-            tooltip: {
-                theme: 'dark'
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.storeData.monthlyExpenses.labels
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => `$${val}`
-                }
-            }
-        };
-
-        // Yearly expenses
-        this.chartYearlyExpenses = {
-            chart: {
-                animations: {
-                    enabled: false
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                sparkline: {
-                    enabled: true
-                }
-            },
-            colors: ['#FB7185'],
-            series: this.storeData.yearlyExpenses.series,
-            stroke: {
-                curve: 'smooth'
-            },
-            tooltip: {
-                theme: 'dark'
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.storeData.yearlyExpenses.labels
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => `$${val}`
-                }
-            }
-        };
-    }
-
 
 }
-
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-    {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-    {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-    {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-    {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-    {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-    {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-    {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-    {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-    {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-    {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-    {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-    {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-    {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-    {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-    {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-];
