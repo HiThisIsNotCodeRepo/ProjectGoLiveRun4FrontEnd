@@ -187,27 +187,27 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
 
 
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
             this.buyNecessityCount = data.taskCount;
             this.buyNecessitySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
             this.foodDeliveryCount = data.taskCount;
             this.foodDeliverySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
             this.sendDocumentCount = data.taskCount;
             this.sendDocumentSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
             this.otherCount = data.taskCount;
             this.otherSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe(
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe(
             (data) => {
                 console.log(data);
                 this.totalTasks = data.totalTasks;
@@ -231,7 +231,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.cd.markForCheck();
             }
         );
-        this._httpClient.get<SpendingTasksResponse>(`${BASE_URL}/spending/tasks/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe(
+        this._httpClient.get<SpendingTasksResponse>(`${BASE_URL}/spending/tasks/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe(
             (data) => {
                 this.spendingTasks = data.tasks;
                 this.dataSource.data = data.tasks;
@@ -277,7 +277,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateCard(dateIndex: number, categoryIndex: number): void {
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
             if (categoryIndex === 0) {
                 this.buyNecessityCount = data.taskCount;
                 this.buyNecessitySpend = data.taskSpend;
@@ -296,7 +296,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateSummary(dateIndex: number): void {
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/61fe8602-af10-435c-b5e1-224f88a9aa61`).subscribe((data) => {
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/f9d2dd88-958d-4623-a78e-1b64ad329207`).subscribe((data) => {
             console.log(data);
             this.totalTasks = data.totalTasks;
             this.dollarSpent = data.dollarSpent;
