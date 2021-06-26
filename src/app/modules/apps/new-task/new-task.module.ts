@@ -9,7 +9,11 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { SharedModule } from 'app/shared/shared.module';
-import {FormsWizardsComponent} from './wizards.component';
+import {FormsWizardsComponent} from './new-task.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatDividerModule} from "@angular/material/divider";
+import {MatListModule} from "@angular/material/list";
 
 export const routes: Route[] = [
     {
@@ -22,7 +26,7 @@ export const routes: Route[] = [
     declarations: [
         FormsWizardsComponent
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(routes),
         MatButtonModule,
         MatCheckboxModule,
@@ -32,7 +36,11 @@ export const routes: Route[] = [
         MatRadioModule,
         MatSelectModule,
         MatStepperModule,
-        SharedModule
+        SharedModule,
+        MatTabsModule,
+        MatExpansionModule,
+        MatDividerModule,
+        MatListModule
     ]
 })
 export class FormsWizardsModule

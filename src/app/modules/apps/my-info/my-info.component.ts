@@ -367,27 +367,27 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
 
 
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe((data) => {
             this.buyNecessityCount = data.taskCount;
             this.buyNecessitySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe((data) => {
             this.foodDeliveryCount = data.taskCount;
             this.foodDeliverySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe((data) => {
             this.sendDocumentCount = data.taskCount;
             this.sendDocumentSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe((data) => {
             this.otherCount = data.taskCount;
             this.otherSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
             (data) => {
                 console.log(data);
                 this.totalTasks = data.totalTasks;
@@ -411,7 +411,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.cd.markForCheck();
             }
         );
-        this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+        this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
             (data) => {
                 this.spendingDataSource.data = data.tasks;
                 this.cd.markForCheck();
@@ -438,20 +438,20 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     public tabChange(evt: any): void {
         console.log(evt);
         if (evt === 0) {
-            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
                 (data) => {
                     this.spendingDataSource.data = data.tasks;
                     this.spendingDataSource.paginator = this.paginator;
                 }
             );
         } else if (evt === 1) {
-            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/earning/tasks/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/earning/tasks/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
                 (data) => {
                     this.earningDataSource.data = data.tasks;
                     this.earningDataSource.paginator = this.paginator;
                 }
             );
-            this._httpClient.get<EarningCardResponse>(`${BASE_URL}/earning/past-days/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+            this._httpClient.get<EarningCardResponse>(`${BASE_URL}/earning/past-days/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
                 (data) => {
                     this.earningPastTwoDaysTotal = data.pastTwoDaysTotal;
                     this.earningPastFiveDaysTotal = data.pastFiveDaysTotal;
@@ -478,7 +478,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                     console.log(data);
                 }
             );
-            this._httpClient.get<EarningRadarResponse>(`${BASE_URL}/earning/radar/this-week/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+            this._httpClient.get<EarningRadarResponse>(`${BASE_URL}/earning/radar/this-week/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
                 (data) => {
                     this.earningRadarChartOptions.series = [
                         {
@@ -508,7 +508,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateCard(dateIndex: number, categoryIndex: number): void {
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe((data) => {
             if (categoryIndex === 0) {
                 this.buyNecessityCount = data.taskCount;
                 this.buyNecessitySpend = data.taskSpend;
@@ -527,7 +527,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateSummary(dateIndex: number): void {
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe((data) => {
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe((data) => {
             console.log(data);
             this.totalTasks = data.totalTasks;
             this.dollarSpent = data.dollarSpent;
@@ -552,7 +552,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateRadar(dateIndex: number): void {
-        this._httpClient.get<EarningRadarResponse>(`${BASE_URL}${RADAR_DATE_ARRAY[dateIndex]}/13885722-107c-43e4-81a7-1c9be0577bf7`).subscribe(
+        this._httpClient.get<EarningRadarResponse>(`${BASE_URL}${RADAR_DATE_ARRAY[dateIndex]}/baecb0d1-fe74-4557-896a-69ca8d3b8668`).subscribe(
             (data) => {
                 this.earningRadarChartOptions.series = [
                     {
