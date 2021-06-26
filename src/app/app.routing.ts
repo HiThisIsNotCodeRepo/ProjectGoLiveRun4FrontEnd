@@ -108,7 +108,7 @@ export const appRoutes: Route[] = [
             },
             {
                 path: 'new-task',
-                loadChildren: () => import('app/modules/apps/new-task/wizards.module').then(m => m.FormsWizardsModule)
+                loadChildren: () => import('app/modules/apps/new-task/new-task.module').then(m => m.FormsWizardsModule)
             },
             // 404 page
             {

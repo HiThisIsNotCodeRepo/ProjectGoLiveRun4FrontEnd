@@ -1,0 +1,412 @@
+<div class="absolute inset-0 flex flex-col flex-auto min-w-0 overflow-y-scroll">
+    <!-- Main -->
+    <div class="flex-auto mt-4 sm:mt-6">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <!-- Tabs -->
+            <mat-tab-group
+                class="sm:px-2"
+                (selectedIndexChange)="tabChange($event)"
+                [animationDuration]="'0'">
+                <mat-tab label="New Task">
+                    <ng-template matTabContent>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                            <div
+                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                            >
+                                <form
+                                    class="p-4 bg-card  rounded overflow-hidden"
+                                    [formGroup]="horizontalStepperForm">
+                                    <mat-horizontal-stepper
+                                        [linear]="true"
+                                        #horizontalStepper>
+                                        <mat-step
+                                            [formGroupName]="'step1'"
+                                            [stepControl]="horizontalStepperForm.get('step1')"
+                                            #horizontalStepperStep1>
+                                            <ng-template matStepLabel>Basic information</ng-template>
+                                            <p class="my-6 font-medium">
+                                                Fill in your basic information to let us know your preferences
+                                            </p>
+                                            <div class="flex flex-col gt-xs:flex-row">
+                                                <mat-form-field class="flex-auto">
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'taskTitle'"
+                                                        [placeholder]="'Task Title'"
+                                                        required>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step1.taskTitle').invalid">
+                                                        Task title
+                                                        is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="flex-auto">
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'from'"
+                                                        [placeholder]="'From'"
+                                                        required>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step1.from').invalid">
+                                                        From address
+                                                        is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="flex-auto">
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'to'"
+                                                        [placeholder]="'To'"
+                                                        required>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step1.to').invalid">To
+                                                        address
+                                                        is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="flex-auto">
+                                                    <mat-select
+                                                        [formControlName]="'category'"
+                                                        [placeholder]="'Category'"
+                                                        required>
+                                                        <mat-option value="0">Buy Necessity</mat-option>
+                                                        <mat-option value="1">Food Delivery</mat-option>
+                                                        <mat-option value="2">Send Document</mat-option>
+                                                        <mat-option value="3">Other</mat-option>
+                                                    </mat-select>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'heroicons_solid:selector'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step1.category').invalid">
+                                                        Category must
+                                                        select
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="flex-auto">
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'expectedRate'"
+                                                        [placeholder]="'Expected Rate'"
+                                                        type="number"
+                                                        max="1000"
+                                                        min="1"
+                                                        required>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'attach_money'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step1.expectedRate').invalid">
+                                                        Expected rate
+                                                        is
+                                                        $1~$1000
+                                                    </mat-error>
+                                                </mat-form-field>
+
+                                            </div>
+                                            <div class="flex justify-end">
+                                                <button
+                                                    class="px-8"
+                                                    mat-flat-button
+                                                    [color]="'primary'"
+                                                    [disabled]="horizontalStepperStep1.stepControl.pristine || horizontalStepperStep1.stepControl.invalid"
+                                                    type="button"
+                                                    matStepperNext>
+                                                    Next
+                                                </button>
+                                            </div>
+                                        </mat-step>
+
+                                        <mat-step
+                                            [formGroupName]="'step2'"
+                                            [stepControl]="horizontalStepperForm.get('step2')"
+                                            #horizontalStepperStep2>
+                                            <ng-template matStepLabel>Start Time</ng-template>
+                                            <p class="my-6 font-medium">
+                                                Please let us know your preference time to start job.
+                                            </p>
+
+                                            <div class="flex flex-col gt-xs:flex-row">
+
+                                                <mat-form-field class="flex-auto">
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'start'"
+                                                        [placeholder]="'Start'"
+                                                        type="datetime-local"
+                                                        min="{{dataStr}}"
+                                                        required>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'access_time_filled'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step2.start').invalid">
+                                                        Start must not
+                                                        be
+                                                        earlier than now
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="flex-auto">
+                                                    <input
+                                                        matInput
+                                                        type="number"
+                                                        [formControlName]="'duration'"
+                                                        [placeholder]="'Duration'"
+                                                        max="100"
+                                                        min="10"
+                                                        required>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step2.duration').invalid">
+                                                        Duration is
+                                                        10~100 mins
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="fuse-mat-textarea flex-auto">
+                                <textarea
+                                    matInput
+                                    [formControlName]="'description'"
+                                    [placeholder]="'Description'"
+                                    [rows]="3"></textarea>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        matPrefix
+                                                        [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
+                                                    <mat-error
+                                                        *ngIf="horizontalStepperForm.get('step2.description').invalid">
+                                                        Description is
+                                                        required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="flex justify-end">
+                                                <button
+                                                    class="px-8 mr-2"
+                                                    mat-flat-button
+                                                    [color]="'accent'"
+                                                    type="button"
+                                                    matStepperPrevious>
+                                                    Back
+                                                </button>
+                                                <button
+                                                    class="px-8"
+                                                    mat-flat-button
+                                                    [color]="'primary'"
+                                                    [disabled]="horizontalStepperStep2.stepControl.pristine || horizontalStepperStep2.stepControl.invalid"
+                                                    type="button"
+                                                    matStepperNext>
+                                                    Next
+                                                </button>
+                                            </div>
+                                        </mat-step>
+                                        <mat-step>
+                                            <ng-template matStepLabel>Done</ng-template>
+                                            <p class="my-6 font-medium">
+                                                Thank you for completing our form! You can reset the form if you
+                                                would like to change your
+                                                information.
+                                            </p>
+                                            <div class="flex justify-end mt-8">
+                                                <button
+                                                    class="px-8"
+                                                    mat-flat-button
+                                                    [color]="'accent'"
+                                                    type="reset"
+                                                    (click)="horizontalStepper.reset();">
+                                                    Reset
+                                                </button>
+                                                <button
+                                                    class="px-8 mr-2"
+                                                    mat-flat-button
+                                                    [color]="'primary'"
+                                                    type="button"
+                                                    (click)="sendData()"
+                                                    matStepperPrevious>
+                                                    Confirm
+                                                </button>
+                                            </div>
+                                        </mat-step>
+                                    </mat-horizontal-stepper>
+                                </form>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+
+                <!-- Earning -->
+                <mat-tab label="New Task - Ongoing">
+                    <ng-template matTabContent>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                            <div
+                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto py-6 bg-card shadow rounded-2xl overflow-hidden"
+                            >
+                                <mat-accordion>
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <span class="flex items-center">
+                                                <span
+                                                    class="animate-ping h-2 w-2 rounded-full bg-black mx-2"></span>Task Id
+                                                </span>
+                                            </mat-panel-title>
+
+                                        </mat-expansion-panel-header>
+                                        <mat-accordion>
+                                            <mat-expansion-panel>
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        Task Description
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <table class="table-auto w-full">
+                                                    <tbody>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Description</td>
+                                                        <td>Adam</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Category</td>
+                                                        <td>Adam</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Start Location</td>
+                                                        <td>Adam</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task To Location</td>
+                                                        <td>Chris</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Duration</td>
+                                                        <td>Chris</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Expected Rate</td>
+                                                        <td>Chris</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </mat-expansion-panel>
+                                            <mat-expansion-panel>
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        Bidder Information
+                                                    </mat-panel-title>
+
+                                                </mat-expansion-panel-header>
+                                                <mat-radio-group aria-label="Select an option">
+                                                    <mat-radio-button value="1">Candidate 1</mat-radio-button>
+                                                    <mat-radio-button value="2">Candidate 2</mat-radio-button>
+                                                    <mat-radio-button value="3">Candidate 3</mat-radio-button>
+                                                    <mat-radio-button value="4">Candidate 4</mat-radio-button>
+                                                    <mat-radio-button value="5">Candidate 5</mat-radio-button>
+                                                </mat-radio-group>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+
+
+                            </div>
+                            <div
+                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto py-6 bg-card shadow rounded-2xl overflow-hidden"
+                            >
+                                <mat-accordion>
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <span class="flex items-center">
+                                                <span
+                                                    class="animate-ping h-2 w-2 rounded-full bg-green-500 mx-2"></span>Task Id
+                                                </span>
+                                            </mat-panel-title>
+
+                                        </mat-expansion-panel-header>
+                                        <mat-accordion>
+                                            <mat-expansion-panel>
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        Task Description
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <table class="table-auto w-full">
+                                                    <tbody>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Description</td>
+                                                        <td>Adam</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Category</td>
+                                                        <td>Adam</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Start Location</td>
+                                                        <td>Adam</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task To Location</td>
+                                                        <td>Chris</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Duration</td>
+                                                        <td>Chris</td>
+                                                    </tr>
+                                                    <tr class="border-b-2">
+                                                        <td>Task Expected Rate</td>
+                                                        <td>Chris</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </mat-expansion-panel>
+                                            <mat-expansion-panel>
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        Bidder Information
+                                                    </mat-panel-title>
+
+                                                </mat-expansion-panel-header>
+                                                <mat-radio-group aria-label="Select an option">
+                                                    <mat-radio-button value="1">Candidate 1</mat-radio-button>
+                                                    <mat-radio-button value="2">Candidate 2</mat-radio-button>
+                                                    <mat-radio-button value="3">Candidate 3</mat-radio-button>
+                                                    <mat-radio-button value="4">Candidate 4</mat-radio-button>
+                                                    <mat-radio-button value="5">Candidate 5</mat-radio-button>
+                                                </mat-radio-group>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+
+
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+
+        </div>
+    </div>
+
+</div>
+
+
+
