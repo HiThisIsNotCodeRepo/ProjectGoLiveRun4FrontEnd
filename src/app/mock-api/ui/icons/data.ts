@@ -144,7 +144,7 @@ export const material = [
     'app_registration',
     'app_settings_alt',
     'approval',
-    'apps',
+    'paotui-apps',
     'architecture',
     'archive',
     'area_chart',

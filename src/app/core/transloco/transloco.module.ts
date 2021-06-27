@@ -33,7 +33,7 @@ import { TranslocoHttpLoader } from 'app/core/transloco/transloco.http-loader';
             useClass: TranslocoHttpLoader
         },
         {
-            // Preload the default language before the app starts to prevent empty/jumping content
+            // Preload the default language before the component starts to prevent empty/jumping content
             provide   : APP_INITIALIZER,
             deps      : [TranslocoService],
             useFactory: (translocoService: TranslocoService): any => (): Promise<Translation> => {

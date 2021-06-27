@@ -25,7 +25,7 @@ export const activities = [
         description  : 'You have 15 unread mails across 3 mailboxes',
         date         : moment().subtract(3, 'hours').toISOString(), // 3 hours ago
         linkedContent: 'Mailbox',
-        link         : '/apps/mailbox',
+        link         : '/paotui-apps/mailbox',
         useRouter    : true
     },
     {
@@ -61,7 +61,7 @@ export const activities = [
                             <li class="font-medium">Previous clients and their invoices</li>
                         </ol>`,
         linkedContent: 'Mailbox',
-        link         : '/apps/mailbox',
+        link         : '/paotui-apps/mailbox',
         useRouter    : true
     },
     {
@@ -70,7 +70,7 @@ export const activities = [
         description  : '<strong>Tina Harris</strong> started a chat with you',
         date         : moment().subtract(1, 'day').toISOString(), // 1 day ago,
         linkedContent: 'Go to Chat (Tina Harris)',
-        link         : '/apps/chat/5636c0ba-fa47-42ca-9160-27340583041e',
+        link         : '/paotui-apps/chat/5636c0ba-fa47-42ca-9160-27340583041e',
         useRouter    : true
     },
     {

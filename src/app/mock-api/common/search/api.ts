@@ -82,7 +82,7 @@ export class SearchMockApi {
                     tasksResults.forEach((result) => {
 
                         // Add a link
-                        result.link = '/apps/post-search-task/' + result.id;
+                        result.link = '/paotui-apps/post-search-task/' + result.id;
                     });
 
                     // Add to the results

@@ -721,7 +721,7 @@ export const tasks = [
     {
         id        : '1ebde495-1bcd-4e8f-b6f6-cf63b521ad06',
         type      : 'section',
-        title     : 'Marketing and promotions for the mobile app',
+        title     : 'Marketing and promotions for the mobile component',
         notes     : 'Aute commodo reprehenderit cupidatat duis nulla mollit sint cupidatat elit adipisicing fugiat sunt cupidatat amet proident fugiat aute adipisicing et non minim occaecat ea esse consectetur aute culpa exercitation incididunt.\n\nEnim et lorem anim dolor excepteur qui tempor cupidatat do proident adipisicing esse incididunt mollit quis irure amet ad officia culpa minim cillum veniam voluptate lorem exercitation sunt cillum dolor.',
         completed : false,
         dueDate   : '2018-08-04T19:32:53.652Z',
