@@ -28,14 +28,15 @@
                                                 [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #summaryMenu="matMenu">
-                                            <button mat-menu-item (click)="updateCard(0,0)">
+                                            <button mat-menu-item (click)="updateCard('yesterday','buy-necessity')">
                                                 Yesterday
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(1,0)">2
+                                            <button mat-menu-item (click)="updateCard('two-days-ago','buy-necessity')">2
                                                 days
                                                 ago
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(2,0)">3
+                                            <button mat-menu-item
+                                                    (click)="updateCard('three-days-ago','buy-necessity')">3
                                                 days
                                                 ago
                                             </button>
@@ -69,13 +70,14 @@
                                                 [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #overdueMenu="matMenu">
-                                            <button mat-menu-item (click)="updateCard(0,1)">
+                                            <button mat-menu-item (click)="updateCard('yesterday','food-delivery')">
                                                 Yesterday
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(1,1)">2
+                                            <button mat-menu-item (click)="updateCard('two-days-ago','food-delivery')">2
                                                 days ago
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(2,1)">3
+                                            <button mat-menu-item
+                                                    (click)="updateCard('three-days-ago','food-delivery')">3
                                                 days ago
                                             </button>
                                         </mat-menu>
@@ -107,13 +109,14 @@
                                                 [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #issuesMenu="matMenu">
-                                            <button mat-menu-item (click)="updateCard(0,2)">
+                                            <button mat-menu-item (click)="updateCard('yesterday','send-document')">
                                                 Yesterday
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(1,2)">2
+                                            <button mat-menu-item (click)="updateCard('two-days-ago','send-document')">2
                                                 days ago
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(2,2)">3
+                                            <button mat-menu-item
+                                                    (click)="updateCard('three-days-ago','send-document')">3
                                                 days ago
                                             </button>
                                         </mat-menu>
@@ -145,13 +148,13 @@
                                                 [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #featuresMenu="matMenu">
-                                            <button mat-menu-item (click)="updateCard(0,3)">
+                                            <button mat-menu-item (click)="updateCard('yesterday','other')">
                                                 Yesterday
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(1,3)">2
+                                            <button mat-menu-item (click)="updateCard('two-days-ago','other')">2
                                                 days ago
                                             </button>
-                                            <button mat-menu-item (click)="updateCard(2,3)">3
+                                            <button mat-menu-item (click)="updateCard('three-days-ago','other')">3
                                                 days ago
                                             </button>
                                         </mat-menu>
@@ -179,9 +182,11 @@
                                         <mat-button-toggle-group
                                             value="this-week"
                                             #tasksWeekSelector="matButtonToggleGroup">
-                                            <mat-button-toggle (click)="updateSummary(1)" value="last-week">Last Week
+                                            <mat-button-toggle (click)="updateSummary('last-week')" value="last-week">
+                                                Last Week
                                             </mat-button-toggle>
-                                            <mat-button-toggle (click)="updateSummary(0)" value="this-week">This Week
+                                            <mat-button-toggle (click)="updateSummary('this-week')" value="this-week">
+                                                This Week
                                             </mat-button-toggle>
                                         </mat-button-toggle-group>
                                     </div>
@@ -351,10 +356,10 @@
                                                 [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #featuresMenu="matMenu">
-                                            <button (click)="updateRadar(0)" mat-menu-item>
+                                            <button (click)="updateRadar('this-week')" mat-menu-item>
                                                 This Week
                                             </button>
-                                            <button (click)="updateRadar(1)" mat-menu-item>
+                                            <button (click)="updateRadar('last-week')" mat-menu-item>
                                                 Last Week
                                             </button>
                                         </mat-menu>

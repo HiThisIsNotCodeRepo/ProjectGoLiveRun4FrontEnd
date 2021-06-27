@@ -81,7 +81,7 @@ export class AuthSignInComponent implements OnInit {
         this.showAlert = false;
         console.log('login');
         // Sign in
-        this._httpClient.post<LoginResponse>(`${BASE_URL}/auth/login`, {
+        this._httpClient.post<LoginResponse>(`${BASE_URL}/auth?option=login`, {
             name: this.signInForm.get('name').value,
             password: this.signInForm.get('password').value
         }).subscribe((data) => {

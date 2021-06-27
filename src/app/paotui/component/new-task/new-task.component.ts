@@ -1,15 +1,30 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {BASE_URL} from "../../app.const";
-import {PaoTuiAuthService} from "../../paotui-auth.service";
+import {BASE_URL} from '../../app.const';
+import {PaoTuiAuthService} from '../../paotui-auth.service';
 
 
-export interface NewTaskResponse {
+interface NewTaskResponse {
     status: string;
     msg: string;
 }
 
+interface OnGoingNewTaskResponse {
+    tasks: Task[];
+}
+
+interface Task {
+    no: number;
+    completeDateTime: string;
+    taskTitle: string;
+    taskCategoryId: number;
+    taskOwnerId: string;
+    taskDeliveredId: string;
+    taskFrom: string;
+    taskTo: string;
+    taskDeliverRate: number;
+}
 
 @Component({
     selector: 'forms-wizards',
@@ -20,13 +35,21 @@ export interface NewTaskResponse {
 export class FormsWizardsComponent implements OnInit {
     horizontalStepperForm: FormGroup;
     public dataStr;
-    favoriteSeason: string;
-    seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
 
     /**
      * Constructor
      */
-    constructor(private _formBuilder: FormBuilder, private _httpClient: HttpClient,private _patotuiAuthService: PaoTuiAuthService,) {
+    constructor(private _formBuilder: FormBuilder, private _httpClient: HttpClient, private _patotuiAuthService: PaoTuiAuthService,) {
+    }
+
+    public tabChange(event: any): void {
+        if (event === 1) {
+            this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?status=on-going`).subscribe(
+                (data) => {
+                    console.log(data);
+                }
+            );
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -77,7 +100,7 @@ export class FormsWizardsComponent implements OnInit {
         console.log(`taskTitle:${taskTitle} type: ${typeof taskTitle},from:${from} type: ${typeof from},to:${to} type: ${typeof to},category:${category}
         type: ${typeof category},expectedRate:${expectedRate}  type: ${typeof expectedRate},duration:${duration}  type: ${typeof duration},start:${start}  type: ${typeof start}`);
         this._httpClient.post<NewTaskResponse>(`${BASE_URL}/tasks/task`, {
-            taskOwnerId: '${this._patotuiAuthService.myId}',
+            taskOwnerId: `${this._patotuiAuthService.myId}`,
             taskTitle: taskTitle,
             from: from,
             to: to,
@@ -91,9 +114,7 @@ export class FormsWizardsComponent implements OnInit {
         });
     }
 
-    public tabChange(evn: any) {
 
-    }
 }
 
 export function timeValidator(): ValidatorFn {

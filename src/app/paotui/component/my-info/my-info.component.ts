@@ -20,15 +20,15 @@ import {
     PastTwoDaysEarning,
     RadarChartOptions
 } from './chartOptions';
-import {BASE_URL, CATEGORY_ARRAY, DATE_ARRAY, DATE_ARRAY_SUMMARY, RADAR_DATE_ARRAY} from '../../app.const';
+import {BASE_URL} from '../../app.const';
 import {PaoTuiAuthService} from '../../paotui-auth.service';
 
-export interface SpendingCardResponse {
+interface SpendingCardResponse {
     taskCount: number;
     taskSpend: number;
 }
 
-export interface SpendingSummaryResponse {
+interface SpendingSummaryResponse {
     lineData: number[];
     columnData: number[];
     totalTasks: number;
@@ -39,11 +39,11 @@ export interface SpendingSummaryResponse {
     other: number;
 }
 
-export interface DataSourceResponse {
+interface DataSourceResponse {
     tasks: Task[];
 }
 
-export interface Task {
+interface Task {
     no: number;
     completeDateTime: string;
     taskTitle: string;
@@ -55,7 +55,7 @@ export interface Task {
     taskDeliverRate: number;
 }
 
-export interface EarningCardResponse {
+interface EarningCardResponse {
     pastTwoDaysTotal: number;
     pastFiveDaysTotal: number;
     pastTenDaysTotal: number;
@@ -64,13 +64,12 @@ export interface EarningCardResponse {
     pastTenDays: number[];
 }
 
-export interface EarningRadarResponse {
+interface EarningRadarResponse {
     buyNecessity: number;
     foodDelivery: number;
     sendDocument: number;
     other: number;
 }
-
 
 
 @Component({
@@ -366,27 +365,31 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
 
 
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[0]}/${this._patotuiAuthService.myId}`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}
+        ?chart-type=card&date=yesterday&category=buy-necessity`).subscribe((data) => {
             this.buyNecessityCount = data.taskCount;
             this.buyNecessitySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[1]}/${this._patotuiAuthService.myId}`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}
+        ?chart-type=card&date=yesterday&category=food-delivery`).subscribe((data) => {
             this.foodDeliveryCount = data.taskCount;
             this.foodDeliverySpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[2]}/${this._patotuiAuthService.myId}`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}
+        ?chart-type=card&date=yesterday&category=send-document`).subscribe((data) => {
             this.sendDocumentCount = data.taskCount;
             this.sendDocumentSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[0]}${CATEGORY_ARRAY[3]}/${this._patotuiAuthService.myId}`).subscribe((data) => {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}
+        ?chart-type=card&date=yesterday&category=other`).subscribe((data) => {
             this.otherCount = data.taskCount;
             this.otherSpend = data.taskSpend;
             this.cd.markForCheck();
         });
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[0]}/summary/${this._patotuiAuthService.myId}`).subscribe(
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}?chart-type=summary&date=this-week`).subscribe(
             (data) => {
                 console.log(data);
                 this.totalTasks = data.totalTasks;
@@ -410,7 +413,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.cd.markForCheck();
             }
         );
-        this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/${this._patotuiAuthService.myId}`).subscribe(
+        this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}?chart-type=datasource`).subscribe(
             (data) => {
                 this.spendingDataSource.data = data.tasks;
                 this.cd.markForCheck();
@@ -437,20 +440,20 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     public tabChange(evt: any): void {
         console.log(evt);
         if (evt === 0) {
-            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/tasks/${this._patotuiAuthService.myId}`).subscribe(
+            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}?chart-type=datasource`).subscribe(
                 (data) => {
                     this.spendingDataSource.data = data.tasks;
                     this.spendingDataSource.paginator = this.paginator;
                 }
             );
         } else if (evt === 1) {
-            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/earning/tasks/${this._patotuiAuthService.myId}`).subscribe(
+            this._httpClient.get<DataSourceResponse>(`${BASE_URL}/earning/${this._patotuiAuthService.myId}?chart-type=datasource`).subscribe(
                 (data) => {
                     this.earningDataSource.data = data.tasks;
                     this.earningDataSource.paginator = this.paginator;
                 }
             );
-            this._httpClient.get<EarningCardResponse>(`${BASE_URL}/earning/past-days/${this._patotuiAuthService.myId}`).subscribe(
+            this._httpClient.get<EarningCardResponse>(`${BASE_URL}/earning/${this._patotuiAuthService.myId}?chart-type=card`).subscribe(
                 (data) => {
                     this.earningPastTwoDaysTotal = data.pastTwoDaysTotal;
                     this.earningPastFiveDaysTotal = data.pastFiveDaysTotal;
@@ -477,7 +480,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                     console.log(data);
                 }
             );
-            this._httpClient.get<EarningRadarResponse>(`${BASE_URL}/earning/this-week/radar/${this._patotuiAuthService.myId}`).subscribe(
+            this._httpClient.get<EarningRadarResponse>(`${BASE_URL}/earning/${this._patotuiAuthService.myId}?chart-type=radar&date=this-week`).subscribe(
                 (data) => {
                     this.earningRadarChartOptions.series = [
                         {
@@ -506,18 +509,19 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
         this.spendingDataSource.paginator = this.paginator;
     }
 
-    public updateCard(dateIndex: number, categoryIndex: number): void {
-        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}${DATE_ARRAY[dateIndex]}${CATEGORY_ARRAY[categoryIndex]}/${this._patotuiAuthService.myId}`).subscribe((data) => {
-            if (categoryIndex === 0) {
+    public updateCard(date: string, category: string): void {
+        this._httpClient.get<SpendingCardResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}
+        ?chart-type=card&date=${date}&category=${category}`).subscribe((data) => {
+            if (category === 'buy-necessity') {
                 this.buyNecessityCount = data.taskCount;
                 this.buyNecessitySpend = data.taskSpend;
-            } else if (categoryIndex === 1) {
+            } else if (category === 'food-delivery') {
                 this.foodDeliveryCount = data.taskCount;
                 this.foodDeliverySpend = data.taskSpend;
-            } else if (categoryIndex === 2) {
+            } else if (category === 'send-document') {
                 this.sendDocumentCount = data.taskCount;
                 this.sendDocumentSpend = data.taskSpend;
-            } else if (categoryIndex === 3) {
+            } else if (category === 'other') {
                 this.otherCount = data.taskCount;
                 this.otherSpend = data.taskSpend;
             }
@@ -525,8 +529,8 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public updateSummary(dateIndex: number): void {
-        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}${DATE_ARRAY_SUMMARY[dateIndex]}/summary/${this._patotuiAuthService.myId}`).subscribe((data) => {
+    public updateSummary(date: string): void {
+        this._httpClient.get<SpendingSummaryResponse>(`${BASE_URL}/spending/${this._patotuiAuthService.myId}?chart-type=summary&date=${date}`).subscribe((data) => {
             console.log(data);
             this.totalTasks = data.totalTasks;
             this.dollarSpent = data.dollarSpent;
@@ -550,8 +554,8 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public updateRadar(dateIndex: number): void {
-        this._httpClient.get<EarningRadarResponse>(`${BASE_URL}${RADAR_DATE_ARRAY[dateIndex]}/${this._patotuiAuthService.myId}`).subscribe(
+    public updateRadar(date: string): void {
+        this._httpClient.get<EarningRadarResponse>(`${BASE_URL}/earning/${this._patotuiAuthService.myId}?chart-type=radar&date=${date}`).subscribe(
             (data) => {
                 this.earningRadarChartOptions.series = [
                     {

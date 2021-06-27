@@ -45,8 +45,11 @@ export class PaotuiGuard implements CanActivate, CanActivateChild {
 
     public checkToken(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         if (this._patotuiAuthService.myId.trim().length > 0 && this._patotuiAuthService.myToken.trim().length > 0) {
-            return this._httpClient.post<VerifyTokenResponse>(`${BASE_URL}/auth/token-verify/${this._patotuiAuthService.myId}`,
-                {token: this._patotuiAuthService.myToken}).pipe(map((response) => {
+            return this._httpClient.post<VerifyTokenResponse>(`${BASE_URL}/auth?option=token-verify`,
+                {
+                    userId: this._patotuiAuthService.myId,
+                    token: this._patotuiAuthService.myToken
+                }).pipe(map((response) => {
                 if (response.status === 'success') {
                     return true;
                 } else {
