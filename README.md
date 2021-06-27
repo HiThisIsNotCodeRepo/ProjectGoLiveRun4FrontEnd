@@ -45,7 +45,7 @@ As project progresses now slowly merge file
 11. Earning-DataSource
 
 ## Screen Recording
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/Animation_20210625.gif)
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/Animation_20210627.gif)
 ## Main Tech Stack
 **Angular**,**HTML**,**CSS**,**Javascript**,**Go**,**MySQL**,**Docker**,**Containerd**,**K8s**
 
