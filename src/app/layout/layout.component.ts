@@ -105,12 +105,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
             this._updateLayout();
         });
 
-        // Set the app version
+        // Set the component version
         this._renderer2.setAttribute(this._document.querySelector('[ng-version]'), 'fuse-version', FUSE_VERSION);
-
-        //    Set layout & theme
-        this.setLayout('material');
-        this.setTheme('default');
     }
 
     /**

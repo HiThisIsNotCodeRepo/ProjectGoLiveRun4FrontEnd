@@ -5,7 +5,9 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from 'app/core/auth/auth.service';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthInterceptor implements HttpInterceptor
 {
     /**
@@ -33,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor
         // This will force the server to return a "401 Unauthorized" response
         // for the protected API routes which our response interceptor will
         // catch and delete the access token from the local storage while logging
-        // the user out from the app.
+        // the user out from the component.
         if ( this._authService.accessToken && !AuthUtils.isTokenExpired(this._authService.accessToken) )
         {
             newReq = req.clone({
@@ -51,7 +53,7 @@ export class AuthInterceptor implements HttpInterceptor
                     // Sign out
                     this._authService.signOut();
 
-                    // Reload the app
+                    // Reload the component
                     location.reload();
                 }
 

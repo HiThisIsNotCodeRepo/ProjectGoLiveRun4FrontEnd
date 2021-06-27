@@ -1,24 +1,24 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
-import {finalize} from 'rxjs/operators';
+import {Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
 
 @Component({
-    selector: 'auth-forgot-password',
-    templateUrl: './forgot-password.component.html',
+    selector: 'auth-sign-up',
+    templateUrl: './sign-up.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
-export class AuthForgotPasswordComponent implements OnInit {
-    @ViewChild('forgotPasswordNgForm') forgotPasswordNgForm: NgForm;
+export class AuthSignUpComponent implements OnInit {
+    @ViewChild('signUpNgForm') signUpNgForm: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: ''
     };
-    forgotPasswordForm: FormGroup;
+    signUpForm: FormGroup;
     showAlert: boolean = false;
 
     /**
@@ -26,7 +26,8 @@ export class AuthForgotPasswordComponent implements OnInit {
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private _router: Router
     ) {
     }
 
@@ -39,9 +40,14 @@ export class AuthForgotPasswordComponent implements OnInit {
      */
     ngOnInit(): void {
         // Create the form
-        this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]]
-        });
+        this.signUpForm = this._formBuilder.group({
+                name: ['', Validators.required],
+                email: ['', [Validators.required, Validators.email]],
+                password: ['', Validators.required],
+                company: [''],
+                agreements: ['', Validators.requiredTrue]
+            }
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -49,20 +55,18 @@ export class AuthForgotPasswordComponent implements OnInit {
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Send the reset link
+     * Sign up
      */
-    sendResetLink(): void {
-        // Return if the form is invalid
-        if (this.forgotPasswordForm.invalid) {
+    signUp(): void {
+        // Do nothing if the form is invalid
+        if (this.signUpForm.invalid) {
             return;
         }
 
         // Disable the form
-        this.forgotPasswordForm.disable();
+        this.signUpForm.disable();
 
         // Hide the alert
         this.showAlert = false;
-
-        // Forgot password
     }
 }

@@ -21,7 +21,7 @@ export const shortcuts = [
         label      : 'Help center',
         description: 'FAQs and guides',
         icon       : 'heroicons_outline:support',
-        link       : '/apps/help-center',
+        link       : '/paotui-apps/help-center',
         useRouter  : true
     },
     {
@@ -37,7 +37,7 @@ export const shortcuts = [
         label      : 'Calendar',
         description: 'Latest appointments',
         icon       : 'heroicons_outline:calendar',
-        link       : '/apps/calendar',
+        link       : '/paotui-apps/calendar',
         useRouter  : true
     },
     {
@@ -45,7 +45,7 @@ export const shortcuts = [
         label      : 'Mailbox',
         description: '5 new e-mails',
         icon       : 'heroicons_outline:mail',
-        link       : 'apps/mailbox',
+        link       : 'paotui-apps/mailbox',
         useRouter  : true
     },
     {
@@ -53,7 +53,7 @@ export const shortcuts = [
         label      : 'Tasks',
         description: '12 unfinished post-search-task',
         icon       : 'heroicons_outline:check-circle',
-        link       : '/apps/post-search-task',
+        link       : '/paotui-apps/post-search-task',
         useRouter  : true
     },
     {
@@ -61,13 +61,13 @@ export const shortcuts = [
         label      : 'Contacts',
         description: 'List all contacts',
         icon       : 'heroicons_outline:user-group',
-        link       : '/apps/contacts',
+        link       : '/paotui-apps/contacts',
         useRouter  : true
     },
     {
         id         : '0a240ab8-e19d-4503-bf68-20013030d526',
         label      : 'Reload',
-        description: 'Reload the app',
+        description: 'Reload the component',
         icon       : 'heroicons_outline:refresh',
         link       : '/dashboards/my-info',
         useRouter  : false

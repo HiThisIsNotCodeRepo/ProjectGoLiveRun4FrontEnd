@@ -1,22 +1,45 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { AuthService } from 'app/core/auth/auth.service';
-import { switchMap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    CanActivateChild,
+    Router,
+    RouterStateSnapshot,
+    UrlTree
+} from '@angular/router';
+import {Observable} from 'rxjs';
+import {AuthService} from 'app/core/auth/auth.service';
+import {PaoTuiAuthService} from 'app/paotui/paotui-auth.service';
+import {HttpClient} from '@angular/common/http';
+import {UserService} from '../../user/user.service';
+
+const user = {
+    id: 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
+    name: 'Brian Hughes',
+    email: 'hughes.brian@company.com',
+    avatar: 'assets/images/avatars/brian-hughes.jpg',
+    status: 'online'
+};
+
+export interface VerifyTokenResponse {
+    status: string;
+    msg: string;
+}
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
-{
+export class AuthGuard implements CanActivate, CanActivateChild {
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
-        private _router: Router
-    )
-    {
+        private _router: Router,
+        private _patotuiAuthService: PaoTuiAuthService,
+        private _httpClient: HttpClient,
+        private _userService: UserService
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -29,10 +52,8 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
      * @param route
      * @param state
      */
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean
-    {
-        const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
-        return this._check(redirectUrl);
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        return true;
     }
 
     /**
@@ -41,53 +62,9 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
      * @param childRoute
      * @param state
      */
-    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
-    {
-        const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
-        return this._check(redirectUrl);
+    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        return true;
     }
 
-    /**
-     * Can load
-     *
-     * @param route
-     * @param segments
-     */
-    canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean
-    {
-        return this._check('/');
-    }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Check the authenticated status
-     *
-     * @param redirectURL
-     * @private
-     */
-    private _check(redirectURL: string): Observable<boolean>
-    {
-        // Check the authentication status
-        return this._authService.check()
-                   .pipe(
-                       switchMap((authenticated) => {
-
-                           // If the user is not authenticated...
-                           if ( !authenticated )
-                           {
-                               // Redirect to the sign-in page
-                               this._router.navigate(['sign-in'], {queryParams: {redirectURL}});
-
-                               // Prevent the access
-                               return of(false);
-                           }
-
-                           // Allow the access
-                           return of(true);
-                       })
-                   );
-    }
 }

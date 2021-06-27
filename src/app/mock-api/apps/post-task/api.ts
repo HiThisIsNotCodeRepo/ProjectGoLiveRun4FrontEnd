@@ -34,7 +34,7 @@ export class TasksMockApi
         // @ Tags - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-task/tags')
+            .onGet('api/paotui-apps/post-task/tags')
             .reply(() => [
                 200,
                 cloneDeep(this._tags)
@@ -44,7 +44,7 @@ export class TasksMockApi
         // @ Tags - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/apps/post-task/tag')
+            .onPost('api/paotui-apps/post-task/tag')
             .reply(({request}) => {
 
                 // Get the tag
@@ -66,7 +66,7 @@ export class TasksMockApi
         // @ Tags - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPatch('api/apps/post-task/tag')
+            .onPatch('api/paotui-apps/post-task/tag')
             .reply(({request}) => {
 
                 // Get the id and tag
@@ -99,7 +99,7 @@ export class TasksMockApi
         // @ Tag - DELETE
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onDelete('api/apps/post-task/tag')
+            .onDelete('api/paotui-apps/post-task/tag')
             .reply(({request}) => {
 
                 // Get the id
@@ -127,7 +127,7 @@ export class TasksMockApi
         // @ Tasks - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-task/all')
+            .onGet('api/paotui-apps/post-task/all')
             .reply(() => {
 
                 // Clone the post-search-task
@@ -146,7 +146,7 @@ export class TasksMockApi
         // @ Tasks Search - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-task/search')
+            .onGet('api/paotui-apps/post-task/search')
             .reply(({request}) => {
 
                 // Get the search query
@@ -190,7 +190,7 @@ export class TasksMockApi
         // @ Tasks Orders - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPatch('api/apps/post-task/order')
+            .onPatch('api/paotui-apps/post-task/order')
             .reply(({request}) => {
 
                 // Get the post-search-task
@@ -217,7 +217,7 @@ export class TasksMockApi
         // @ Task - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/apps/post-task/task')
+            .onGet('api/paotui-apps/post-task/task')
             .reply(({request}) => {
 
                 // Get the id from the params
@@ -239,7 +239,7 @@ export class TasksMockApi
         // @ Task - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/apps/post-task/task')
+            .onPost('api/paotui-apps/post-task/task')
             .reply(({request}) => {
 
                 // Generate a new search-task
@@ -273,7 +273,7 @@ export class TasksMockApi
         // @ Task - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPatch('api/apps/post-task/task')
+            .onPatch('api/paotui-apps/post-task/task')
             .reply(({request}) => {
 
                 // Get the id and search-task
@@ -306,7 +306,7 @@ export class TasksMockApi
         // @ Task - DELETE
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onDelete('api/apps/post-task/task')
+            .onDelete('api/paotui-apps/post-task/task')
             .reply(({request}) => {
 
                 // Get the id

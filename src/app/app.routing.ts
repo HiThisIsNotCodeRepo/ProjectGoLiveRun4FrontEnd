@@ -1,28 +1,15 @@
 import {Route} from '@angular/router';
-import {AuthGuard} from 'app/core/auth/guards/auth.guard';
-import {NoAuthGuard} from 'app/core/auth/guards/noAuth.guard';
 import {LayoutComponent} from 'app/layout/layout.component';
-import {InitialDataResolver} from 'app/app.resolvers';
+import {PaotuiGuard} from './paotui/paotui-guard.guard';
+
 
 // @formatter:off
 // tslint:disable:max-line-length
 export const appRoutes: Route[] = [
 
-    // Redirect empty path to '/example'
-    {path: '', pathMatch: 'full', redirectTo: 'search-task'},
-
-    // Redirect signed in user to the '/example'
-    //
-    // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
-    // path. Below is another redirection for that path to redirect the user to the desired
-    // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'search-task'},
-
-    // Auth routes for guests
+    {path: '', pathMatch: 'full', redirectTo: 'sign-in'},
     {
         path: '',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -42,11 +29,11 @@ export const appRoutes: Route[] = [
             },
             {
                 path: 'sign-in',
-                loadChildren: () => import('app/modules/auth/sign-in/sign-in.module').then(m => m.AuthSignInModule)
+                loadChildren: () => import('app/paotui/component/sign-in/sign-in.module').then(m => m.AuthSignInModule)
             },
             {
                 path: 'sign-up',
-                loadChildren: () => import('app/modules/auth/sign-up/sign-up.module').then(m => m.AuthSignUpModule)
+                loadChildren: () => import('app/paotui/component/sign-up/sign-up.module').then(m => m.AuthSignUpModule)
             }
         ]
     },
@@ -54,8 +41,6 @@ export const appRoutes: Route[] = [
     // Auth routes for authenticated users
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -63,52 +48,29 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'sign-out',
-                loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule)
-            },
-            {
-                path: 'unlock-session',
-                loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule)
-            }
-        ]
-    },
-
-    // Landing routes
-    {
-        path: '',
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
-        },
-        children: [
-            {
-                path: 'home',
-                loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)
+                loadChildren: () => import('app/paotui/component/sign-out/sign-out.module').then(m => m.AuthSignOutModule)
             },
         ]
     },
-
     // Admin routes
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
         component: LayoutComponent,
-        resolve: {
-            initialData: InitialDataResolver,
-        },
+        canActivate: [PaotuiGuard],
+        canActivateChild: [PaotuiGuard],
         children: [
             // Apps
             {
                 path: 'my-info',
-                loadChildren: () => import('app/modules/apps/my-info/my-info.module').then(m => m.MyInfoModule)
+                loadChildren: () => import('app/paotui/component/my-info/my-info.module').then(m => m.MyInfoModule)
             },
             {
                 path: 'search-task',
-                loadChildren: () => import('app/modules/apps/search-task/browse-task.module').then(m => m.BrowseTaskModule)
+                loadChildren: () => import('app/paotui/component/search-task/browse-task.module').then(m => m.BrowseTaskModule)
             },
             {
                 path: 'new-task',
-                loadChildren: () => import('app/modules/apps/new-task/new-task.module').then(m => m.FormsWizardsModule)
+                loadChildren: () => import('app/paotui/component/new-task/new-task.module').then(m => m.FormsWizardsModule)
             },
             // 404 page
             {

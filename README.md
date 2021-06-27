@@ -11,21 +11,41 @@ Due to Covid 19, an ad hoc job posting platform has emerged to provide more job 
 ## Front Ende Template Selection
 To expediate front end developement, I have choosen a [template](https://themeforest.net/item/fuse-angularjs-material-design-admin-template/12931855?gclid=CjwKCAjwq7aGBhADEiwA6uGZpx14Dv86Apxo_47dPNLqdKC3U5N7gDGr9eBmZ-sn1-lpdgRpDAkTvhoCTmUQAvD_BwE) which provide UI structure layout and material components. So I can more focus on the logic development.
 
-## Core Feature Updated List
-1. User My-Info Page
-    1. Spending-Buy Necessity-Card(Yesterday/2 days ago/3 days ago)
-    2. Spending-Food Delivery-Card(Yesterday/2 days ago/3 days ago)
-    3. Spending-Send Document-Card(Yesterday/2 days ago/3 days ago)
-    4. Spending-Other-Card(Yesterday/2 days ago/3 days ago)
-    5. Spending-Task Summary(Line/Column Table/OverView)(Last Week/This Week)
-    6. Spending-DataSource
-    7. Earning-Earning Summary(Last Week/This Week)
-    8. Earning-Past 2 Days
-    9. Earning-Past 5 Days
-    10. Earning-Past 10 Days
-    11. Earning-DataSource
+## File Directory
+As project progresses now slowly merge file
+```
+|--src
+|   |--app
+|   ...
+|   |-- paotui
+|       |-- component # This folder contains main component of the application
+|       |-- app.const.ts # Some constant
+|       |-- paotui-auth.service.ts # Singleton service store user data
+|       |-- paotui-guard.guard.ts # Route guard
+|        ...
+```
+## Page navigation and route guard
+1. User id and password login
+   - Back end server issue token back.
+2. Page routing and guard
+   - Only valid token will grant user access to restricted page
+3. Token storage
+   - Token is stored in the application, refresh will make it lose.
+## My Info Page List
+1. Spending-Buy Necessity-Card(Yesterday/2 days ago/3 days ago)
+2. Spending-Food Delivery-Card(Yesterday/2 days ago/3 days ago)
+3. Spending-Send Document-Card(Yesterday/2 days ago/3 days ago)
+4. Spending-Other-Card(Yesterday/2 days ago/3 days ago)
+5. Spending-Task Summary(Line/Column Table/OverView)(Last Week/This Week)
+6. Spending-DataSource
+7. Earning-Earning Summary(Last Week/This Week)
+8. Earning-Past 2 Days
+9. Earning-Past 5 Days
+10. Earning-Past 10 Days
+11. Earning-DataSource
+
 ## Screen Recording
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/Animation_20210625.gif)
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/Animation_20210627.gif)
 ## Main Tech Stack
 **Angular**,**HTML**,**CSS**,**Javascript**,**Go**,**MySQL**,**Docker**,**Containerd**,**K8s**
 
