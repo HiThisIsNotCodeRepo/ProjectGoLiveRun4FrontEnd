@@ -30,7 +30,6 @@ export class FuseFindByKeyPipe implements PipeTransform
         {
             return value.map(item => source.find(sourceItem => sourceItem[key] === item));
         }
-
         // If the value is a string...
         return source.find(sourceItem => sourceItem[key] === value);
     }

@@ -16,14 +16,27 @@ interface OnGoingNewTaskResponse {
 
 interface Task {
     no: number;
-    completeDateTime: string;
+    taskId: string;
     taskTitle: string;
+    taskDescription: string;
     taskCategoryId: number;
-    taskOwnerId: string;
-    taskDeliveredId: string;
     taskFrom: string;
     taskTo: string;
+    taskCreate: string;
+    taskStart: string;
+    taskComplete: string;
+    taskDuration: number;
+    taskStep: number;
+    taskOwnerId: string;
+    taskOwnerRate: number;
+    taskDeliverId: number;
     taskDeliverRate: number;
+    bidders: Bidder[];
+}
+
+interface Bidder {
+    taskBidderId: string;
+    taskBidderRate: number;
 }
 
 @Component({
@@ -35,6 +48,7 @@ interface Task {
 export class FormsWizardsComponent implements OnInit {
     horizontalStepperForm: FormGroup;
     public dataStr;
+    public tasks: Task[];
 
     /**
      * Constructor
@@ -44,9 +58,10 @@ export class FormsWizardsComponent implements OnInit {
 
     public tabChange(event: any): void {
         if (event === 1) {
-            this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?status=on-going`).subscribe(
+            this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
                 (data) => {
                     console.log(data);
+                    this.tasks = data.tasks;
                 }
             );
         }
@@ -114,7 +129,9 @@ export class FormsWizardsComponent implements OnInit {
         });
     }
 
-
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
 }
 
 export function timeValidator(): ValidatorFn {

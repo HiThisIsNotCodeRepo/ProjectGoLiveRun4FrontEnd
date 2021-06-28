@@ -98,7 +98,11 @@
                             "browserTarget": "fuse:build:development"
                         }
                     },
-                    "defaultConfiguration": "development"
+                    "defaultConfiguration": "development",
+                    "options": {
+                        "sslKey": "./cert/key.pem",
+                        "sslCert": "./cert/cert.pem"
+                    }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -139,7 +143,7 @@
     },
     "defaultProject": "fuse",
     "cli": {
-      "analytics": "2c07520f-85e9-417a-957c-ea69b3f2c13a",
+        "analytics": "2c07520f-85e9-417a-957c-ea69b3f2c13a",
         "defaultCollection": "@angular-eslint/schematics"
     }
 }

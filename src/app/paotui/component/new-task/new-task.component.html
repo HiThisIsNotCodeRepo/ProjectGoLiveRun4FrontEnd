@@ -255,149 +255,134 @@
                 <mat-tab label="New Task - Ongoing">
                     <ng-template matTabContent>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
-                            <div
-                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto py-6 bg-card shadow rounded-2xl overflow-hidden"
-                            >
-                                <mat-accordion>
-                                    <mat-expansion-panel>
-                                        <mat-expansion-panel-header>
-                                            <mat-panel-title>
+                            <ng-container *ngFor="let task of tasks">
+                                <div
+                                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto py-6 bg-card shadow rounded-2xl overflow-hidden"
+                                >
+                                    <mat-accordion>
+                                        <mat-expansion-panel>
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title>
                                                 <span class="flex items-center">
-                                                <span
-                                                    class="animate-ping h-2 w-2 rounded-full bg-black mx-2"></span>Task Id
+                                                <ng-container [ngSwitch]="task.taskCategoryId">
+                                                <ng-container *ngSwitchCase="0">
+                                                    <span
+                                                        class="animate-ping h-2 w-2 rounded-full bg-blue-500 mx-2"></span>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="1">
+                                                    <span
+                                                        class="animate-ping h-2 w-2 rounded-full bg-green-500 mx-2"></span>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="2">
+                                                     <span
+                                                         class="animate-ping h-2 w-2 rounded-full bg-pink-500 mx-2"></span>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="3">
+                                                    <span
+                                                        class="animate-ping h-2 w-2 rounded-full bg-amber-500 mx-2"></span>
+                                                </ng-container>
+                                            </ng-container>
+                                                    {{task.taskTitle}}
                                                 </span>
-                                            </mat-panel-title>
+                                                </mat-panel-title>
+                                                <mat-panel-description>
+                                                    Created: {{task.taskCreate | convFormat}}
+                                                </mat-panel-description>
+                                            </mat-expansion-panel-header>
+                                            <mat-accordion>
+                                                <mat-expansion-panel>
+                                                    <mat-expansion-panel-header>
+                                                        <mat-panel-title>
+                                                            Task Description
+                                                        </mat-panel-title>
+                                                    </mat-expansion-panel-header>
+                                                    <table class="table-auto w-full">
+                                                        <tbody>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Description</td>
+                                                            <td>{{task.taskDescription}}</td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Category</td>
+                                                            <td><span
+                                                                [ngSwitch]="task.taskCategoryId">
+                                                                                <span
+                                                                                    *ngSwitchCase="0">Buy Necessity</span>
 
-                                        </mat-expansion-panel-header>
-                                        <mat-accordion>
-                                            <mat-expansion-panel>
-                                                <mat-expansion-panel-header>
-                                                    <mat-panel-title>
-                                                        Task Description
-                                                    </mat-panel-title>
-                                                </mat-expansion-panel-header>
-                                                <table class="table-auto w-full">
-                                                    <tbody>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Description</td>
-                                                        <td>Adam</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Category</td>
-                                                        <td>Adam</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Start Location</td>
-                                                        <td>Adam</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task To Location</td>
-                                                        <td>Chris</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Duration</td>
-                                                        <td>Chris</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Expected Rate</td>
-                                                        <td>Chris</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </mat-expansion-panel>
-                                            <mat-expansion-panel>
-                                                <mat-expansion-panel-header>
-                                                    <mat-panel-title>
-                                                        Bidder Information
-                                                    </mat-panel-title>
+                                                                                <span
+                                                                                    *ngSwitchCase="1">Send Document</span>
+                                                                                <span
+                                                                                    *ngSwitchCase="2">Food Delivery</span>
+                                                                                <span *ngSwitchCase="3">Other</span>
+                                                                            </span></td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Start Location</td>
+                                                            <td>{{task.taskFrom}}</td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task To Location</td>
+                                                            <td>{{task.taskTo}}</td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Duration</td>
+                                                            <td>{{task.taskDuration}}</td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Start Date Time</td>
+                                                            <td>{{task.taskStart | convFormat}}</td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Expected Rate</td>
+                                                            <td>{{task.taskOwnerRate}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </mat-expansion-panel>
+                                                <mat-expansion-panel>
+                                                    <mat-expansion-panel-header>
+                                                        <mat-panel-title>
+                                                            Bidder Information
+                                                        </mat-panel-title>
 
-                                                </mat-expansion-panel-header>
-                                                <mat-radio-group aria-label="Select an option">
-                                                    <mat-radio-button value="1">Candidate 1</mat-radio-button>
-                                                    <mat-radio-button value="2">Candidate 2</mat-radio-button>
-                                                    <mat-radio-button value="3">Candidate 3</mat-radio-button>
-                                                    <mat-radio-button value="4">Candidate 4</mat-radio-button>
-                                                    <mat-radio-button value="5">Candidate 5</mat-radio-button>
-                                                </mat-radio-group>
-                                            </mat-expansion-panel>
-                                        </mat-accordion>
-                                    </mat-expansion-panel>
-                                </mat-accordion>
+                                                    </mat-expansion-panel-header>
+                                                    <ng-container *ngIf="task.bidders; else noBidder">
+                                                        <mat-radio-group aria-label="Select an option">
+                                                            <mat-radio-button value="1">Candidate 1</mat-radio-button>
+                                                            <mat-radio-button value="2">Candidate 2</mat-radio-button>
+                                                            <mat-radio-button value="3">Candidate 3</mat-radio-button>
+                                                            <mat-radio-button value="4">Candidate 4</mat-radio-button>
+                                                            <mat-radio-button value="5">Candidate 5</mat-radio-button>
+                                                        </mat-radio-group>
+                                                    </ng-container>
+                                                    no bidder found
+                                                    <ng-template #noBidder>
 
+                                                    </ng-template>
+                                                </mat-expansion-panel>
+                                                <mat-expansion-panel>
+                                                    <mat-expansion-panel-header>
+                                                        <mat-panel-title>
+                                                            Action
+                                                        </mat-panel-title>
 
-                            </div>
-                            <div
-                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto py-6 bg-card shadow rounded-2xl overflow-hidden"
-                            >
-                                <mat-accordion>
-                                    <mat-expansion-panel>
-                                        <mat-expansion-panel-header>
-                                            <mat-panel-title>
-                                                <span class="flex items-center">
-                                                <span
-                                                    class="animate-ping h-2 w-2 rounded-full bg-green-500 mx-2"></span>Task Id
-                                                </span>
-                                            </mat-panel-title>
-
-                                        </mat-expansion-panel-header>
-                                        <mat-accordion>
-                                            <mat-expansion-panel>
-                                                <mat-expansion-panel-header>
-                                                    <mat-panel-title>
-                                                        Task Description
-                                                    </mat-panel-title>
-                                                </mat-expansion-panel-header>
-                                                <table class="table-auto w-full">
-                                                    <tbody>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Description</td>
-                                                        <td>Adam</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Category</td>
-                                                        <td>Adam</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Start Location</td>
-                                                        <td>Adam</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task To Location</td>
-                                                        <td>Chris</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Duration</td>
-                                                        <td>Chris</td>
-                                                    </tr>
-                                                    <tr class="border-b-2">
-                                                        <td>Task Expected Rate</td>
-                                                        <td>Chris</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </mat-expansion-panel>
-                                            <mat-expansion-panel>
-                                                <mat-expansion-panel-header>
-                                                    <mat-panel-title>
-                                                        Bidder Information
-                                                    </mat-panel-title>
-
-                                                </mat-expansion-panel-header>
-                                                <mat-radio-group aria-label="Select an option">
-                                                    <mat-radio-button value="1">Candidate 1</mat-radio-button>
-                                                    <mat-radio-button value="2">Candidate 2</mat-radio-button>
-                                                    <mat-radio-button value="3">Candidate 3</mat-radio-button>
-                                                    <mat-radio-button value="4">Candidate 4</mat-radio-button>
-                                                    <mat-radio-button value="5">Candidate 5</mat-radio-button>
-                                                </mat-radio-group>
-                                            </mat-expansion-panel>
-                                        </mat-accordion>
-
-                                    </mat-expansion-panel>
-                                </mat-accordion>
+                                                    </mat-expansion-panel-header>
+                                                    Edit Complete Delete
+                                                    <div class="text-right">
+                                                        <button mat-raised-button color="primary">Edit</button>
+                                                        <button mat-raised-button color="accent">Complete</button>
+                                                        <button mat-raised-button color="warn">Delete</button>
+                                                    </div>
+                                                </mat-expansion-panel>
+                                            </mat-accordion>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
 
 
-                            </div>
+                                </div>
+                            </ng-container>
+
+
                         </div>
                     </ng-template>
                 </mat-tab>

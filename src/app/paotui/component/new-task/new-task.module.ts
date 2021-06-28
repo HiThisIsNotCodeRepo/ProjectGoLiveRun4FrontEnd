@@ -12,8 +12,9 @@ import { SharedModule } from 'app/shared/shared.module';
 import {FormsWizardsComponent} from './new-task.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {MatDividerModule} from "@angular/material/divider";
-import {MatListModule} from "@angular/material/list";
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
+import {PaotuiCommonModule} from "../../paotui.module";
 
 export const routes: Route[] = [
     {
@@ -24,7 +25,7 @@ export const routes: Route[] = [
 
 @NgModule({
     declarations: [
-        FormsWizardsComponent
+        FormsWizardsComponent,
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -40,7 +41,8 @@ export const routes: Route[] = [
         MatTabsModule,
         MatExpansionModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        PaotuiCommonModule
     ]
 })
 export class FormsWizardsModule
