@@ -5,17 +5,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserComponent } from 'app/paotui/component/user/user.component';
 import { SharedModule } from 'app/shared/shared.module';
+import {PaotuiCommonModule} from "../../paotui.module";
 
 @NgModule({
     declarations: [
         UserComponent
     ],
-    imports     : [
+    imports: [
         MatButtonModule,
         MatDividerModule,
         MatIconModule,
         MatMenuModule,
-        SharedModule
+        SharedModule,
+        PaotuiCommonModule
     ],
     exports     : [
         UserComponent

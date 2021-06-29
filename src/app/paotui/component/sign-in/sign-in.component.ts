@@ -6,6 +6,7 @@ import {FuseAlertType} from '@fuse/components/alert';
 import {HttpClient} from '@angular/common/http';
 import {PaoTuiAuthService} from '../../paotui-auth.service';
 import {BASE_URL} from '../../app.const';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 interface LoginResponse {
@@ -41,6 +42,7 @@ export class AuthSignInComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _router: Router,
         private _patotuiAuthService: PaoTuiAuthService,
+        private _snackBar: MatSnackBar
     ) {
     }
 
@@ -75,26 +77,38 @@ export class AuthSignInComponent implements OnInit {
         }
 
         // Disable the form
-        this.signInForm.disable();
+        // this.signInForm.disable();
 
         // Hide the alert
         this.showAlert = false;
         console.log('login');
         // Sign in
-        this._httpClient.post<LoginResponse>(`${BASE_URL}/auth/login`, {
+        this._httpClient.post<LoginResponse>(`${BASE_URL}/auth?option=login`, {
             name: this.signInForm.get('name').value,
             password: this.signInForm.get('password').value
         }).subscribe((data) => {
             console.log(data);
-            this._patotuiAuthService.myToken = data.token;
-            this._patotuiAuthService.myId = data.userId;
-            this._patotuiAuthService.email = data.email;
-            this._patotuiAuthService.lastLogin = data.lastLogin;
-            this._router.navigate(['/search-task']);
+            if (data.status === 'error') {
+                this.openSnackBar('User name or password incorrect');
+            } else {
+                this._patotuiAuthService.myToken = data.token;
+                this._patotuiAuthService.myId = data.userId;
+                this._patotuiAuthService.email = data.email;
+                this._patotuiAuthService.lastLogin = data.lastLogin;
+                this._router.navigate(['/search-task']);
+            }
+
         });
     }
 
     search(): void {
         this._router.navigate(['/search-task']);
+    }
+
+    openSnackBar(message: string): void {
+        this._snackBar.open(message, 'close', {
+            duration: 2000,
+            panelClass: ['my-snack-bar']
+        });
     }
 }

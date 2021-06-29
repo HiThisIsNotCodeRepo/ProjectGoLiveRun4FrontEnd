@@ -1,15 +1,62 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {BASE_URL} from "../../app.const";
-import {PaoTuiAuthService} from "../../paotui-auth.service";
+import {BASE_URL} from '../../app.const';
+import {PaoTuiAuthService} from '../../paotui-auth.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ChangeExpectedRateDialogComponent} from './change-expected-rate-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
 
 
-export interface NewTaskResponse {
+interface NewTaskResponse {
     status: string;
     msg: string;
 }
 
+interface OnGoingNewTaskResponse {
+    tasks: Task[];
+}
+
+export interface DialogData {
+    animal: string;
+    rate: number;
+}
+
+interface Task {
+    no: number;
+    taskId: string;
+    taskTitle: string;
+    taskDescription: string;
+    taskCategoryId: number;
+    taskFrom: string;
+    taskTo: string;
+    taskCreate: string;
+    taskStart: string;
+    taskComplete: string;
+    taskDuration: number;
+    taskStep: number;
+    taskOwnerId: string;
+    taskOwnerRate: number;
+    taskDeliverId: string;
+    taskDeliverRate: number;
+    bidders: Bidder[];
+}
+
+interface Bidder {
+    taskBidderId: string;
+    taskBidderRate: number;
+}
+
+interface UpdateExpectedRateResponse {
+    status: string;
+    msg: string;
+}
+
+interface DeleteResponse {
+    status: string;
+    msg: string;
+}
 
 @Component({
     selector: 'forms-wizards',
@@ -20,13 +67,25 @@ export interface NewTaskResponse {
 export class FormsWizardsComponent implements OnInit {
     horizontalStepperForm: FormGroup;
     public dataStr;
-    favoriteSeason: string;
-    seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
+    public tasks: Task[];
+    rate: number;
+    bidderIdChoice: string;
 
     /**
      * Constructor
      */
-    constructor(private _formBuilder: FormBuilder, private _httpClient: HttpClient,private _patotuiAuthService: PaoTuiAuthService,) {
+    constructor(private _formBuilder: FormBuilder, private _httpClient: HttpClient, private _patotuiAuthService: PaoTuiAuthService, public dialog: MatDialog, private _snackBar: MatSnackBar, private _router: Router,) {
+    }
+
+    public tabChange(event: any): void {
+        if (event === 1) {
+            this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.tasks = data.tasks;
+                }
+            );
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -77,7 +136,7 @@ export class FormsWizardsComponent implements OnInit {
         console.log(`taskTitle:${taskTitle} type: ${typeof taskTitle},from:${from} type: ${typeof from},to:${to} type: ${typeof to},category:${category}
         type: ${typeof category},expectedRate:${expectedRate}  type: ${typeof expectedRate},duration:${duration}  type: ${typeof duration},start:${start}  type: ${typeof start}`);
         this._httpClient.post<NewTaskResponse>(`${BASE_URL}/tasks/task`, {
-            taskOwnerId: '${this._patotuiAuthService.myId}',
+            taskOwnerId: `${this._patotuiAuthService.myId}`,
             taskTitle: taskTitle,
             from: from,
             to: to,
@@ -88,11 +147,91 @@ export class FormsWizardsComponent implements OnInit {
             description: description,
         }).subscribe((data) => {
             console.log(data);
+            if (data.status === 'success') {
+                this.openSnackBar('Add successful');
+            }
+
+        })
+        ;
+    }
+
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+
+    updateExpectedRate(taskId: string): void {
+        const dialogRef = this.dialog.open(ChangeExpectedRateDialogComponent, {
+            width: '400px',
+            data: {rate: this.rate}
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result !== undefined) {
+                console.log(`The new rate is ${result}`);
+                this._httpClient.put<UpdateExpectedRateResponse>(`${BASE_URL}/tasks/task/${taskId}?option=update-expected-rate`, {
+                    rate: result,
+                }).subscribe((data) => {
+                    console.log(data);
+                    if (data.status === 'success') {
+                        this.openSnackBar('Update successful');
+                        this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                            (response) => {
+                                console.log(response);
+                                this.tasks = response.tasks;
+                            }
+                        );
+                    }
+
+                });
+            }
+
         });
     }
 
-    public tabChange(evn: any) {
+    confirmDeliver(taskId: string, deliverId: string): void {
+        const deliverID = deliverId.split('|')[0];
+        const deliverRate = deliverId.split('|')[1];
+        console.log(`confirm deliver taskId: ${taskId},deliverId:${deliverID},deliverRate:${deliverRate}`);
+        this._httpClient.put<UpdateExpectedRateResponse>(`${BASE_URL}/tasks/task/${taskId}?option=confirm-task-deliver`, {
+            deliverRate: Number(deliverRate),
+            deliverId: deliverID,
+        }).subscribe((data) => {
+            console.log(data);
+            if (data.status === 'success') {
+                this.openSnackBar('Confirm successful');
+                this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                    (response) => {
+                        console.log(response);
+                        this.tasks = response.tasks;
+                    }
+                );
+            }
 
+        });
+    }
+
+    deleteTask(taskId: string): void {
+        console.log(`confirm delete taskID: ${taskId}`);
+        this._httpClient.delete<DeleteResponse>(`${BASE_URL}/tasks/task/${taskId}?option=delete`).subscribe((data) => {
+            console.log(data);
+            if (data.status === 'success') {
+                this.openSnackBar('Delete successful');
+                this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                    (response) => {
+                        console.log(response);
+                        this.tasks = response.tasks;
+                    }
+                );
+            }
+
+        });
+    }
+
+    openSnackBar(message: string): void {
+        this._snackBar.open(message, 'close', {
+            duration: 2000,
+            panelClass: ['my-snack-bar']
+        });
     }
 }
 

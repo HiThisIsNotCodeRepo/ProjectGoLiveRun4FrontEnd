@@ -12,8 +12,12 @@ import { SharedModule } from 'app/shared/shared.module';
 import {FormsWizardsComponent} from './new-task.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {MatDividerModule} from "@angular/material/divider";
-import {MatListModule} from "@angular/material/list";
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
+import {PaotuiCommonModule} from '../../paotui.module';
+import {ChangeExpectedRateDialogComponent} from './change-expected-rate-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 export const routes: Route[] = [
     {
@@ -24,7 +28,8 @@ export const routes: Route[] = [
 
 @NgModule({
     declarations: [
-        FormsWizardsComponent
+        FormsWizardsComponent,
+        ChangeExpectedRateDialogComponent,
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -40,7 +45,10 @@ export const routes: Route[] = [
         MatTabsModule,
         MatExpansionModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        PaotuiCommonModule,
+        MatDialogModule,
+        MatSnackBarModule,
     ]
 })
 export class FormsWizardsModule

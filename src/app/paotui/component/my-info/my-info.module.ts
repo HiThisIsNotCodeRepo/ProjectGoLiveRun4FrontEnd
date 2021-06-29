@@ -16,6 +16,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import {MyInfoComponent} from './my-info.component';
 import {myInfoRoutes} from './my-info.routing';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {PaotuiCommonModule} from "../../paotui.module";
 
 @NgModule({
     declarations: [
@@ -36,7 +37,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         NgApexchartsModule,
         TranslocoModule,
         SharedModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        PaotuiCommonModule
     ]
 })
 export class MyInfoModule
