@@ -13,7 +13,6 @@ import {FuseFindByKeyPipeModule} from '@fuse/pipes/find-by-key';
 import {SharedModule} from 'app/shared/shared.module';
 import {academyRoutes} from 'app/paotui/component/search-task/browse-task.routing';
 import {
-    DialogComponent,
     TaskListComponent
 } from 'app/paotui/component/search-task/list.component';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -21,11 +20,12 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {FuseCardModule} from '@fuse/components/card';
 import {MatDialogModule} from '@angular/material/dialog';
 import {PaotuiCommonModule} from '../../paotui.module';
+import {ExpectedRateDialogComponent} from './expected-rate-dialog.component';
 
 @NgModule({
     declarations: [
         TaskListComponent,
-        DialogComponent,
+        ExpectedRateDialogComponent,
     ],
     imports: [
         RouterModule.forChild(academyRoutes),

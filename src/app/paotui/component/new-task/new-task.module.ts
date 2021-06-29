@@ -14,7 +14,10 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
-import {PaotuiCommonModule} from "../../paotui.module";
+import {PaotuiCommonModule} from '../../paotui.module';
+import {ChangeExpectedRateDialogComponent} from './change-expected-rate-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 export const routes: Route[] = [
     {
@@ -26,6 +29,7 @@ export const routes: Route[] = [
 @NgModule({
     declarations: [
         FormsWizardsComponent,
+        ChangeExpectedRateDialogComponent,
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -42,7 +46,9 @@ export const routes: Route[] = [
         MatExpansionModule,
         MatDividerModule,
         MatListModule,
-        PaotuiCommonModule
+        PaotuiCommonModule,
+        MatDialogModule,
+        MatSnackBarModule,
     ]
 })
 export class FormsWizardsModule

@@ -135,7 +135,7 @@
                                             [formGroupName]="'step2'"
                                             [stepControl]="horizontalStepperForm.get('step2')"
                                             #horizontalStepperStep2>
-                                            <ng-template matStepLabel>Start Time</ng-template>
+                                            <ng-template matStepLabel>More Information</ng-template>
                                             <p class="my-6 font-medium">
                                                 Please let us know your preference time to start job.
                                             </p>
@@ -218,12 +218,88 @@
                                             </div>
                                         </mat-step>
                                         <mat-step>
-                                            <ng-template matStepLabel>Done</ng-template>
+                                            <ng-template matStepLabel>Submit</ng-template>
                                             <p class="my-6 font-medium">
-                                                Thank you for completing our form! You can reset the form if you
-                                                would like to change your
-                                                information.
+                                                Please verify your input
                                             </p>
+                                            <table class="table-auto w-full">
+                                                <tbody>
+                                                <tr class="border-b-2">
+                                                    <td>Task Description</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step2.description')">
+                                                            {{this.horizontalStepperForm.get('step2.description').value}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task Category</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step1.category')">
+                                                        <span
+                                                            [ngSwitch]="this.horizontalStepperForm.get('step1.category').value">
+                                                                                <span
+                                                                                    *ngSwitchCase="0">Buy Necessity</span>
+
+                                                                                <span
+                                                                                    *ngSwitchCase="1">Send Document</span>
+                                                                                <span
+                                                                                    *ngSwitchCase="2">Food Delivery</span>
+                                                                                <span *ngSwitchCase="3">Other</span>
+                                                                            </span>
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task Start Location</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step1.from')">
+                                                            {{this.horizontalStepperForm.get('step1.from').value}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task To Location</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step1.to')">
+                                                            {{this.horizontalStepperForm.get('step1.to').value}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task Duration</td>
+                                                    <td>
+
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step2.duration')">
+                                                            {{this.horizontalStepperForm.get('step2.duration').value}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task Start Date Time</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step2.start')">
+                                                            {{this.horizontalStepperForm.get('step2.start').value | convFormat}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task Expected Rate</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step1.expectedRate')">
+                                                            {{this.horizontalStepperForm.get('step1.expectedRate').value}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
                                             <div class="flex justify-end mt-8">
                                                 <button
                                                     class="px-8"
@@ -238,7 +314,7 @@
                                                     mat-flat-button
                                                     [color]="'primary'"
                                                     type="button"
-                                                    (click)="sendData()"
+                                                    (click)="sendData();horizontalStepper.reset()"
                                                     matStepperPrevious>
                                                     Confirm
                                                 </button>
@@ -346,19 +422,31 @@
                                                         </mat-panel-title>
 
                                                     </mat-expansion-panel-header>
-                                                    <ng-container *ngIf="task.bidders; else noBidder">
-                                                        <mat-radio-group aria-label="Select an option">
-                                                            <mat-radio-button value="1">Candidate 1</mat-radio-button>
-                                                            <mat-radio-button value="2">Candidate 2</mat-radio-button>
-                                                            <mat-radio-button value="3">Candidate 3</mat-radio-button>
-                                                            <mat-radio-button value="4">Candidate 4</mat-radio-button>
-                                                            <mat-radio-button value="5">Candidate 5</mat-radio-button>
+                                                    <ng-container *ngIf="task.bidders.length > 0; else noBidder">
+                                                        <mat-radio-group aria-label="Select an option"
+                                                                         [(ngModel)]="task.taskDeliverId">
+                                                            <ng-container
+                                                                *ngFor="let bidder of task.bidders; trackBy: trackByFn">
+                                                                <mat-radio-button
+                                                                    value="{{bidder.taskBidderId}}|{{bidder.taskBidderRate}}">
+                                                                    ${{bidder.taskBidderRate}}</mat-radio-button>
+                                                            </ng-container>
                                                         </mat-radio-group>
+                                                        <button class="ml-4"
+                                                                (click)="confirmDeliver(task.taskId,task.taskDeliverId)"
+                                                                mat-raised-button>Confirm
+                                                        </button>
                                                     </ng-container>
-                                                    no bidder found
-                                                    <ng-template #noBidder>
 
+
+                                                    <ng-template #noBidder>
+                                                        no bidder found
                                                     </ng-template>
+                                                    <ng-container>
+                                                        <div>
+                                                            User Id selected : {{task.taskDeliverId}}
+                                                        </div>
+                                                    </ng-container>
                                                 </mat-expansion-panel>
                                                 <mat-expansion-panel>
                                                     <mat-expansion-panel-header>
@@ -369,9 +457,14 @@
                                                     </mat-expansion-panel-header>
                                                     Edit Complete Delete
                                                     <div class="text-right">
-                                                        <button mat-raised-button color="primary">Edit</button>
-                                                        <button mat-raised-button color="accent">Complete</button>
-                                                        <button mat-raised-button color="warn">Delete</button>
+                                                        <ng-container *ngIf="task.bidders.length > 0">
+                                                            <button mat-raised-button color="primary"
+                                                                    (click)="updateExpectedRate(task.taskId)">Edit
+                                                            </button>
+                                                        </ng-container>
+                                                        <button mat-raised-button color="warn"
+                                                                (click)="deleteTask(task.taskId)">Delete
+                                                        </button>
                                                     </div>
                                                 </mat-expansion-panel>
                                             </mat-accordion>

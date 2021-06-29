@@ -8,20 +8,14 @@ import {Pipe, PipeTransform} from '@angular/core';
     pure: false
 })
 export class ConvFormatPipe implements PipeTransform {
-    /**
-     * Constructor
-     */
+
     constructor() {
     }
 
-    /**
-     * Transform
-     *
-     * @param value A string or an array of strings to find from source
-     * @param key Key of the object property to look for
-     * @param source Array of objects to find from
-     */
     transform(value: string): any {
+        if (value === null) {
+            return '';
+        }
         const splitArr = value.split('T');
         const date = splitArr[0];
         const subSplitArr = splitArr[1].split('+');

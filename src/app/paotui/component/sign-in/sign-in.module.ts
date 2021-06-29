@@ -11,6 +11,7 @@ import {FuseAlertModule} from '@fuse/components/alert';
 import {SharedModule} from 'app/shared/shared.module';
 import {AuthSignInComponent} from 'app/paotui/component/sign-in/sign-in.component';
 import {authSignInRoutes} from 'app/paotui/component/sign-in/sign-in.routing';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import {authSignInRoutes} from 'app/paotui/component/sign-in/sign-in.routing';
         MatProgressSpinnerModule,
         FuseCardModule,
         FuseAlertModule,
-        SharedModule
+        SharedModule,
+        MatSnackBarModule,
     ],
 })
 export class AuthSignInModule {

@@ -31,19 +31,6 @@
                         matInput
                         #query>
                 </mat-form-field>
-                <mat-form-field
-                    class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
-                    [floatLabel]="'always'">
-                    <mat-icon
-                        matPrefix
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                    <input
-                        type="datetime-local"
-                        placeholder="Search by title or description"
-                        matInput
-                        #query>
-                </mat-form-field>
                 <mat-slide-toggle
                     class="mt-8 sm:mt-0 sm:ml-auto"
                     [color]="'primary'"
@@ -142,35 +129,48 @@
                                             [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                                         <div class="ml-1.5">To:{{task.taskTo}} </div>
                                     </div>
+                                    <div class="w-12 h-1 my-6 border-t-2"></div>
+                                    <div class="flex items-center leading-5 text-md text-secondary">
+                                        <ng-container *ngIf="isMyIdInBidders(_patotuiAuthService.myId,task.bidders)">
+                                            Your bid rate ${{MyBidRate(_patotuiAuthService.myId, task.bidders)}}
+                                        </ng-container>
+                                    </div>
                                 </div>
                                 <!-- Footer -->
-                                <div class="flex flex-col w-full mt-auto">
-                                    <!-- Course progress -->
-                                    <!--                                    <div class="relative h-0.5">-->
-                                    <!--                                        <div-->
-                                    <!--                                            class="z-10 absolute inset-x-0 h-6 -mt-3"-->
-                                    <!--                                            [matTooltip]="(task.taskStep +1) / 3 | percent"-->
-                                    <!--                                            [matTooltipPosition]="'above'"-->
-                                    <!--                                            [matTooltipClass]="'-mb-0.5'"></div>-->
-                                    <!--                                        <mat-progress-bar-->
-                                    <!--                                            class="h-0.5"-->
-                                    <!--                                            [value]="(100 * (task.taskStep+1)) / 3"></mat-progress-bar>-->
-                                    <!--                                    </div>-->
+                                <ng-container *ngIf="!isMyIdInBidders(_patotuiAuthService.myId,task.bidders)">
+                                    <div class="flex flex-col w-full mt-auto">
+                                        <!-- Course progress -->
+                                        <!--                                    <div class="relative h-0.5">-->
+                                        <!--                                        <div-->
+                                        <!--                                            class="z-10 absolute inset-x-0 h-6 -mt-3"-->
+                                        <!--                                            [matTooltip]="(task.taskStep +1) / 3 | percent"-->
+                                        <!--                                            [matTooltipPosition]="'above'"-->
+                                        <!--                                            [matTooltipClass]="'-mb-0.5'"></div>-->
+                                        <!--                                        <mat-progress-bar-->
+                                        <!--                                            class="h-0.5"-->
+                                        <!--                                            [value]="(100 * (task.taskStep+1)) / 3"></mat-progress-bar>-->
+                                        <!--                                    </div>-->
 
-                                    <!-- Course launch button -->
-                                    <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                        <button
-                                            mat-stroked-button
-                                            (click)="openDialog()">
+                                        <!-- Course launch button -->
+                                        <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
+
+
+                                            <button
+                                                mat-stroked-button
+                                                (click)="bid(task.taskId)">
                                         <span class="inline-flex items-center">
                                                 Bid
                                             <mat-icon
                                                 class="ml-1.5 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
                                         </span>
-                                        </button>
+                                            </button>
+
+                                        </div>
+
                                     </div>
-                                </div>
+                                </ng-container>
+
                             </div>
                         </ng-container>
                     </div>

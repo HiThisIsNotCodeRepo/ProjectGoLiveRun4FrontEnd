@@ -15,11 +15,11 @@ import {Paginator} from 'app/paotui/component/search-task/browse-task.types';
 import {HttpClient} from '@angular/common/http';
 import {BASE_URL} from '../../app.const';
 import {PaoTuiAuthService} from '../../paotui-auth.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
+import {ExpectedRateDialogComponent} from './expected-rate-dialog.component';
 
-export interface DialogData {
-    animal: string;
-    name: string;
+export interface ExpectedRateDialogData {
+    rate: number;
 }
 
 export interface CategoryResponse {
@@ -64,6 +64,11 @@ interface Bidder {
     taskBidderRate: number;
 }
 
+interface TaskBidResponse {
+    status: string;
+    msg: string;
+}
+
 @Component({
     selector: 'academy-list',
     templateUrl: './list.component.html',
@@ -72,8 +77,7 @@ interface Bidder {
 })
 export class TaskListComponent implements OnInit, OnDestroy {
     @ViewChild('paginatorObj') paginatorObj: MatPaginator;
-    animal: string;
-    name: string;
+    rate: number;
     initComplete = false;
     initCategory = 'all';
     initQuery = '';
@@ -82,7 +86,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         pageSize: 3,
     };
     categories: Category[];
-    tasks: Task[];
+    tasks: Task[] = null;
     filteredTasks: Task[];
     filters: {
         categorySlug$: BehaviorSubject<string>;
@@ -116,15 +120,30 @@ export class TaskListComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    openDialog(): void {
-        const dialogRef = this.dialog.open(DialogComponent, {
+    bid(taskId: string): void {
+        const dialogRef = this.dialog.open(ExpectedRateDialogComponent, {
             width: '400px',
-            data: {name: this.name, animal: this.animal}
+            data: {rate: this.rate}
         });
-
         dialogRef.afterClosed().subscribe((result) => {
-            console.log('The dialog was closed');
-            this.animal = result;
+            console.log(`Bid info,bidTaskId:${taskId},bidRate:${result}`);
+            if (result !== undefined) {
+                this._httpClient.post<TaskBidResponse>(`${BASE_URL}/tasks/bid`, {
+                    taskId: taskId,
+                    taskBidderId: `${this._patotuiAuthService.myId}`,
+                    taskBidderRate: result,
+                }).subscribe((data) => {
+                    console.log(data);
+                    this._httpClient.get<TaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}
+                    ?option=on-going&category=exclude-me&identity=user`).subscribe((response) => {
+                        // this.tasks = this.filteredTasks = response.tasks;
+                        // console.log(this.tasks);
+                        // this._changeDetectorRef.markForCheck();
+                        this.updateTask();
+                    });
+                });
+            }
+
         });
     }
 
@@ -139,8 +158,15 @@ export class TaskListComponent implements OnInit, OnDestroy {
         this._httpClient.get<CategoryResponse>(`${BASE_URL}/categories`).subscribe((data) => {
             this.categories = data.categories;
         });
+
+        this.updateTask();
+
+    }
+
+    updateTask(): void {
         this._httpClient.get<TaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=exclude-me&identity=user`).subscribe((data) => {
             this.tasks = this.filteredTasks = data.tasks;
+            console.log(this.tasks);
             this._changeDetectorRef.markForCheck();
             combineLatest([this.filters.categorySlug$, this.filters.query$, this.filters.hideCompleted$, this.filters.paginator$])
                 .subscribe(([categorySlug, query, hideCompleted, paginator]) => {
@@ -157,6 +183,34 @@ export class TaskListComponent implements OnInit, OnDestroy {
                     if (query !== '') {
                         this.filteredTasks = this.filteredTasks.filter(task => task.taskTitle.toLowerCase().includes(query.toLowerCase())
                             || task.taskDescription.toLowerCase().includes(query.toLowerCase()));
+                    }
+
+                    if (hideCompleted) {
+                        console.log(`toggle triggered ${hideCompleted}`);
+                        this.filteredTasks = this.filteredTasks.filter((task) => {
+                            if (task.bidders === null) {
+                                return false;
+                            }
+                            const found = task.bidders.find(bid => bid.taskBidderId === this._patotuiAuthService.myId);
+                            if (found === undefined) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        });
+                    } else {
+                        console.log(`toggle triggered ${hideCompleted}`);
+                        this.filteredTasks = this.filteredTasks.filter((task) => {
+                            if (task.bidders === null) {
+                                return true;
+                            }
+                            const found = task.bidders.find(bid => bid.taskBidderId === this._patotuiAuthService.myId);
+                            if (found === undefined) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
                     }
 
                     // set filtercourse size before paginator
@@ -186,10 +240,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
                     this.filteredTasks = this.filteredTasks.slice(paginator.pageIndex * paginator.pageSize, paginator.pageIndex * paginator.pageSize + paginator.pageSize);
                 });
         });
-
-
     }
-
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
@@ -224,25 +275,23 @@ export class TaskListComponent implements OnInit, OnDestroy {
         this.filters.paginator$.next(this.paginator);
     }
 
-
-}
-
-@Component({
-    selector: 'dialog-overview-example-dialog',
-    templateUrl: './dialog.html',
-    styles: [
-        ``
-    ]
-})
-export class DialogComponent {
-
-    constructor(
-        public dialogRef: MatDialogRef<DialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    isMyIdInBidders(myid: string, bidders: Bidder[]): boolean {
+        if (bidders === null || bidders === undefined || bidders.length === 0) {
+            return false;
+        } else {
+            const found = bidders.find(bid => bid.taskBidderId === myid);
+            if (found === undefined) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 
-    onNoClick(): void {
-        this.dialogRef.close();
+    MyBidRate(myid: string, bidders: Bidder[]): number {
+        const found = bidders.find(bid => bid.taskBidderId === myid);
+        return found.taskBidderRate;
     }
 
 }
+

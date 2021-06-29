@@ -3,6 +3,10 @@ import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, 
 import {HttpClient} from '@angular/common/http';
 import {BASE_URL} from '../../app.const';
 import {PaoTuiAuthService} from '../../paotui-auth.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ChangeExpectedRateDialogComponent} from './change-expected-rate-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
 
 
 interface NewTaskResponse {
@@ -12,6 +16,11 @@ interface NewTaskResponse {
 
 interface OnGoingNewTaskResponse {
     tasks: Task[];
+}
+
+export interface DialogData {
+    animal: string;
+    rate: number;
 }
 
 interface Task {
@@ -29,7 +38,7 @@ interface Task {
     taskStep: number;
     taskOwnerId: string;
     taskOwnerRate: number;
-    taskDeliverId: number;
+    taskDeliverId: string;
     taskDeliverRate: number;
     bidders: Bidder[];
 }
@@ -37,6 +46,16 @@ interface Task {
 interface Bidder {
     taskBidderId: string;
     taskBidderRate: number;
+}
+
+interface UpdateExpectedRateResponse {
+    status: string;
+    msg: string;
+}
+
+interface DeleteResponse {
+    status: string;
+    msg: string;
 }
 
 @Component({
@@ -49,11 +68,13 @@ export class FormsWizardsComponent implements OnInit {
     horizontalStepperForm: FormGroup;
     public dataStr;
     public tasks: Task[];
+    rate: number;
+    bidderIdChoice: string;
 
     /**
      * Constructor
      */
-    constructor(private _formBuilder: FormBuilder, private _httpClient: HttpClient, private _patotuiAuthService: PaoTuiAuthService,) {
+    constructor(private _formBuilder: FormBuilder, private _httpClient: HttpClient, private _patotuiAuthService: PaoTuiAuthService, public dialog: MatDialog, private _snackBar: MatSnackBar, private _router: Router,) {
     }
 
     public tabChange(event: any): void {
@@ -126,11 +147,91 @@ export class FormsWizardsComponent implements OnInit {
             description: description,
         }).subscribe((data) => {
             console.log(data);
-        });
+            if (data.status === 'success') {
+                this.openSnackBar('Add successful');
+            }
+
+        })
+        ;
     }
 
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    updateExpectedRate(taskId: string): void {
+        const dialogRef = this.dialog.open(ChangeExpectedRateDialogComponent, {
+            width: '400px',
+            data: {rate: this.rate}
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result !== undefined) {
+                console.log(`The new rate is ${result}`);
+                this._httpClient.put<UpdateExpectedRateResponse>(`${BASE_URL}/tasks/task/${taskId}?option=update-expected-rate`, {
+                    rate: result,
+                }).subscribe((data) => {
+                    console.log(data);
+                    if (data.status === 'success') {
+                        this.openSnackBar('Update successful');
+                        this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                            (response) => {
+                                console.log(response);
+                                this.tasks = response.tasks;
+                            }
+                        );
+                    }
+
+                });
+            }
+
+        });
+    }
+
+    confirmDeliver(taskId: string, deliverId: string): void {
+        const deliverID = deliverId.split('|')[0];
+        const deliverRate = deliverId.split('|')[1];
+        console.log(`confirm deliver taskId: ${taskId},deliverId:${deliverID},deliverRate:${deliverRate}`);
+        this._httpClient.put<UpdateExpectedRateResponse>(`${BASE_URL}/tasks/task/${taskId}?option=confirm-task-deliver`, {
+            deliverRate: Number(deliverRate),
+            deliverId: deliverID,
+        }).subscribe((data) => {
+            console.log(data);
+            if (data.status === 'success') {
+                this.openSnackBar('Confirm successful');
+                this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                    (response) => {
+                        console.log(response);
+                        this.tasks = response.tasks;
+                    }
+                );
+            }
+
+        });
+    }
+
+    deleteTask(taskId: string): void {
+        console.log(`confirm delete taskID: ${taskId}`);
+        this._httpClient.delete<DeleteResponse>(`${BASE_URL}/tasks/task/${taskId}?option=delete`).subscribe((data) => {
+            console.log(data);
+            if (data.status === 'success') {
+                this.openSnackBar('Delete successful');
+                this._httpClient.get<OnGoingNewTaskResponse>(`${BASE_URL}/tasks/${this._patotuiAuthService.myId}?option=on-going&category=only-me&identity=user`).subscribe(
+                    (response) => {
+                        console.log(response);
+                        this.tasks = response.tasks;
+                    }
+                );
+            }
+
+        });
+    }
+
+    openSnackBar(message: string): void {
+        this._snackBar.open(message, 'close', {
+            duration: 2000,
+            panelClass: ['my-snack-bar']
+        });
     }
 }
 

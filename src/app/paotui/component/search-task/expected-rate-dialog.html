@@ -1,9 +1,9 @@
 <div mat-dialog-content class="text-center -mb-4">
-    <mat-form-field style="width: 300px">
+    <mat-form-field style="width: 100%">
         <input
             matInput
-            [formControlName]="'expectedRate'"
             [placeholder]="'Your Expected Rate'"
+            [(ngModel)]="data.rate"
             type="number"
             max="1000"
             min="1"
@@ -17,5 +17,5 @@
 
 <div mat-dialog-actions align="end">
     <button mat-button (click)="onNoClick()">No Thanks</button>
-    <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+    <button mat-button [mat-dialog-close]="data.rate" cdkFocusInitial>Ok</button>
 </div>
