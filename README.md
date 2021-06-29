@@ -22,34 +22,30 @@ As project progresses now slowly merge file
 |       |-- app.const.ts # Some constant
 |       |-- paotui-auth.service.ts # Singleton service store user data
 |       |-- paotui-guard.guard.ts # Route guard
+|       |-- date.pipe.ts # common pipe
+|       |-- paotui.module.ts # module to export pipe etc
 |        ...
 ```
-## Page navigation and route guard
-1. User id and password login
-   - Back end server issue token back.
-2. Page routing and guard
-   - Only valid token will grant user access to restricted page
-3. Token storage
-   - Token is stored in the application, refresh will make it lose.
-## My Info Page List
-1. Spending-Buy Necessity-Card(Yesterday/2 days ago/3 days ago)
-2. Spending-Food Delivery-Card(Yesterday/2 days ago/3 days ago)
-3. Spending-Send Document-Card(Yesterday/2 days ago/3 days ago)
-4. Spending-Other-Card(Yesterday/2 days ago/3 days ago)
-5. Spending-Task Summary(Line/Column Table/OverView)(Last Week/This Week)
-6. Spending-DataSource
-7. Earning-Earning Summary(Last Week/This Week)
-8. Earning-Past 2 Days
-9. Earning-Past 5 Days
-10. Earning-Past 10 Days
-11. Earning-DataSource
 
-## Screen Recording
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/Animation_20210627.gif)
+## Installation Note
+This repository is front end part of the whole project it requires installation of this [repository](https://github.com/qinchenfeng/ProjectGoLiveRun4BackEnd)
+## Installation Guide
+1. `git clone https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd.git`
+2. `npm install`
+3. `ng serve --ssl`
+## Core features
+1. User id and password login
+2. Page routing and guard, it based on token issued by back end.
+3. Token storage in the singleton service.
+## Demo
+### Login
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/log_in.gif)
+### Add Task
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/add_task.gif)
 ## Main Tech Stack
 **Angular**,**HTML**,**CSS**,**Javascript**,**Go**,**MySQL**,**Docker**,**Containerd**,**K8s**
 
-## Document Link
+## Other
 ### Git
 [git update](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/git/git.md)
 ### Angular
