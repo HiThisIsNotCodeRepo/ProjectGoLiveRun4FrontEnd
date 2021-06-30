@@ -40,6 +40,8 @@ This repository is front end part of the whole project it requires installation 
 ## Demo
 ### Login
 ![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/log_in.gif)
+### Login
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/sign_up.gif)
 ### Add Task
 ![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/add_task.gif)
 ### Bid Task
