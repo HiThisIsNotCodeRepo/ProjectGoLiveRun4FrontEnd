@@ -217,7 +217,7 @@ export class MyInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                 labels: {
                     formatter: (val, i): string => {
                         if (i % 2 === 0) {
-                            return val + '';
+                            return val.toFixed(2) + '';
                         } else {
                             return '';
                         }

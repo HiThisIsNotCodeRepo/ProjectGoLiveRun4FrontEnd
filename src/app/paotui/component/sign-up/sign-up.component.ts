@@ -4,6 +4,14 @@ import {Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {BASE_URL} from '../../app.const';
+import {HttpClient} from "@angular/common/http";
+
+interface RegisterResponse {
+    status: string;
+    msg: string;
+}
 
 @Component({
     selector: 'auth-sign-up',
@@ -27,7 +35,9 @@ export class AuthSignUpComponent implements OnInit {
     constructor(
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
-        private _router: Router
+        private _router: Router,
+        private _snackBar: MatSnackBar,
+        private _httpClient: HttpClient,
     ) {
     }
 
@@ -44,8 +54,6 @@ export class AuthSignUpComponent implements OnInit {
                 name: ['', Validators.required],
                 email: ['', [Validators.required, Validators.email]],
                 password: ['', Validators.required],
-                company: [''],
-                agreements: ['', Validators.requiredTrue]
             }
         );
     }
@@ -64,9 +72,33 @@ export class AuthSignUpComponent implements OnInit {
         }
 
         // Disable the form
-        this.signUpForm.disable();
+        // this.signUpForm.disable();
 
         // Hide the alert
         this.showAlert = false;
+        console.log(`sign-up name:${this.signUpForm.get('name').value}, sign-up email:${this.signUpForm.get('email').value}
+        sign-up password:${this.signUpForm.get('password').value}`);
+        // register
+        this._httpClient.post<RegisterResponse>(`${BASE_URL}/users/user`, {
+            name: this.signUpForm.get('name').value,
+            email: this.signUpForm.get('email').value,
+            password: this.signUpForm.get('password').value
+        }).subscribe((data) => {
+            console.log(data);
+            if (data.status === 'error') {
+                this.openSnackBar('User Register Failed');
+            } else {
+                this.openSnackBar('User Register Success');
+                this._router.navigate(['/sign-in']);
+            }
+
+        });
+    }
+
+    openSnackBar(message: string): void {
+        this._snackBar.open(message, 'close', {
+            duration: 2000,
+            panelClass: ['my-snack-bar']
+        });
     }
 }

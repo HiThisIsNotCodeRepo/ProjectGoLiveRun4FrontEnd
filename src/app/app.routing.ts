@@ -16,18 +16,6 @@ export const appRoutes: Route[] = [
         },
         children: [
             {
-                path: 'confirmation-required',
-                loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.module').then(m => m.AuthConfirmationRequiredModule)
-            },
-            {
-                path: 'forgot-password',
-                loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule)
-            },
-            {
-                path: 'reset-password',
-                loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule)
-            },
-            {
                 path: 'sign-in',
                 loadChildren: () => import('app/paotui/component/sign-in/sign-in.module').then(m => m.AuthSignInModule)
             },
@@ -71,11 +59,6 @@ export const appRoutes: Route[] = [
             {
                 path: 'new-task',
                 loadChildren: () => import('app/paotui/component/new-task/new-task.module').then(m => m.FormsWizardsModule)
-            },
-            // 404 page
-            {
-                path: '404',
-                loadChildren: () => import('app/modules/error-404/error-404.module').then(m => m.Error404Module)
             },
         ]
     }
