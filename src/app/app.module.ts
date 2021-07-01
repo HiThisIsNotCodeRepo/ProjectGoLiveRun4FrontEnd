@@ -13,7 +13,7 @@ import {LayoutModule} from 'app/layout/layout.module';
 import {AppComponent} from 'app/app.component';
 import {appRoutes} from 'app/app.routing';
 
-import {PaoTuiAuthService} from './paotui/paotui-auth.service';
+import {httpInterceptorProviders} from './paotui/paotui-interceptor-index';
 
 const routerConfig: ExtraOptions = {
     scrollPositionRestoration: 'enabled',
@@ -45,6 +45,9 @@ const routerConfig: ExtraOptions = {
     ],
     bootstrap: [
         AppComponent,
+    ],
+    providers: [
+        httpInterceptorProviders
     ]
 })
 export class AppModule {
