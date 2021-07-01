@@ -222,6 +222,8 @@ export class FormsWizardsComponent implements OnInit {
                         this.tasks = response.tasks;
                     }
                 );
+            } else if (data.status === 'error') {
+                this.openSnackBar('Delete fail');
             }
 
         });

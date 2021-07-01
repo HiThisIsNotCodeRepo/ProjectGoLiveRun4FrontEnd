@@ -6,7 +6,7 @@ import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BASE_URL} from '../../app.const';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 
 interface RegisterResponse {
     status: string;
