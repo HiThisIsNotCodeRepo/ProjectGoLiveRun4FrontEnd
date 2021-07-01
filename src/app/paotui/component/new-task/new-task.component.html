@@ -224,15 +224,7 @@
                                             </p>
                                             <table class="table-auto w-full">
                                                 <tbody>
-                                                <tr class="border-b-2">
-                                                    <td>Task Description</td>
-                                                    <td>
-                                                        <ng-container
-                                                            *ngIf="this.horizontalStepperForm.get('step2.description')">
-                                                            {{this.horizontalStepperForm.get('step2.description').value}}
-                                                        </ng-container>
-                                                    </td>
-                                                </tr>
+
                                                 <tr class="border-b-2">
                                                     <td>Task Category</td>
                                                     <td>
@@ -294,7 +286,16 @@
                                                     <td>
                                                         <ng-container
                                                             *ngIf="this.horizontalStepperForm.get('step1.expectedRate')">
-                                                            {{this.horizontalStepperForm.get('step1.expectedRate').value}}
+                                                            ${{this.horizontalStepperForm.get('step1.expectedRate').value}}
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b-2">
+                                                    <td>Task Description</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="this.horizontalStepperForm.get('step2.description')">
+                                                            {{this.horizontalStepperForm.get('step2.description').value}}
                                                         </ng-container>
                                                     </td>
                                                 </tr>
@@ -374,10 +375,7 @@
                                                     </mat-expansion-panel-header>
                                                     <table class="table-auto w-full">
                                                         <tbody>
-                                                        <tr class="border-b-2">
-                                                            <td>Task Description</td>
-                                                            <td>{{task.taskDescription}}</td>
-                                                        </tr>
+
                                                         <tr class="border-b-2">
                                                             <td>Task Category</td>
                                                             <td><span
@@ -411,6 +409,10 @@
                                                         <tr class="border-b-2">
                                                             <td>Task Expected Rate</td>
                                                             <td>${{task.taskOwnerRate}}</td>
+                                                        </tr>
+                                                        <tr class="border-b-2">
+                                                            <td>Task Description</td>
+                                                            <td>{{task.taskDescription}}</td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
