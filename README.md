@@ -28,11 +28,10 @@ As project progresses now slowly merge file
 ```
 
 ## Installation Note
-This repository is front end part of the whole project it requires installation of this [repository](https://github.com/qinchenfeng/ProjectGoLiveRun4BackEnd)
-## Installation Guide
-1. `git clone https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd.git`
-2. `npm install`
-3. `ng serve --ssl`
+Now available at [Ansible deployment](https://github.com/qinchenfeng/AnsibleDeployProjectGoLiveRun4)
+## New features
+### HTTPS
+![](https://i.imgur.com/2Hw0ody.png)
 ## Core features
 1. User id and password login
 2. Page routing and guard, it based on token issued by back end.
