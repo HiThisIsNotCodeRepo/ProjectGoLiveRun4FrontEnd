@@ -14,13 +14,13 @@ docker cp paotui.crt my-nginx:/my_ssl && docker cp paotui.key my-nginx:/my_ssl
 docker restart my-nginx
 
 # 将含前端网页的容器重新制作为镜像
-# a3e51c2d186b为容器id
-docker commit a3e51c2d186b magicpowerworld/paotui_front_end:20210708
+# 0893fcf3620b为容器id
+docker commit 0893fcf3620b magicpowerworld/paotui_front_end:20210710
 # 制作完镜像之后推送
-docker push magicpowerworld/paotui_front_end:20210708
+docker push magicpowerworld/paotui_front_end:20210710
 
 # 生产环境下部署镜像
-docker run --name paotui_front_end -p 443:443 -d magicpowerworld/paotui_front_end:20210708
+docker run --name paotui_front_end -p 443:443 -d magicpowerworld/paotui_front_end:20210710
 
 # 进入docker将配置文件复制到本地
 docker exec -it my-nginx bash
