@@ -61,5 +61,10 @@ export const appRoutes: Route[] = [
                 loadChildren: () => import('app/paotui/component/new-task/new-task.module').then(m => m.FormsWizardsModule)
             },
         ]
+    },
+    {
+        path: '**',
+        pathMatch: 'full',
+        redirectTo: 'sign-in'
     }
 ];
