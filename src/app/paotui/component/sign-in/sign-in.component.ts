@@ -16,6 +16,7 @@ interface LoginResponse {
     userId: string;
     lastLogin: string;
     email: string;
+    avatarUrl: string;
 }
 
 @Component({
@@ -95,6 +96,7 @@ export class AuthSignInComponent implements OnInit {
                 this._patotuiAuthService.myId = data.userId;
                 this._patotuiAuthService.email = data.email;
                 this._patotuiAuthService.lastLogin = data.lastLogin;
+                this._patotuiAuthService.avatarUrl = data.avatarUrl;
                 this._router.navigate(['/search-task']);
             }
 
