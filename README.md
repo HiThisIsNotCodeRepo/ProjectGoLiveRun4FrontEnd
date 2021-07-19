@@ -32,7 +32,7 @@ Now available at [Ansible deployment](https://github.com/qinchenfeng/AnsibleDepl
 ## New features
 ### Upload user avatar
 Using https://cloudinary.com/
-![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/dev/src/doc/gif/upload_avatar.gif)
+![DemoGif](https://github.com/qinchenfeng/ProjectGoLiveRun4FrontEnd/blob/master/src/doc/gif/upload_avatar.gif)
 ## Core features
 1. User id and password login
 2. Page routing and guard, it based on token issued by back end.
