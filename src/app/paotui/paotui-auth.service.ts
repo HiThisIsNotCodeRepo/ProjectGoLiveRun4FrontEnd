@@ -8,12 +8,14 @@ export class PaoTuiAuthService {
     public myId = '';
     public email = '';
     public lastLogin = '';
+    public avatarUrl = '';
 
     public clearAll(): void {
         this.myToken = '';
         this.myId = '';
         this.email = '';
         this.lastLogin = '';
+        this.avatarUrl = '';
     }
 
 }

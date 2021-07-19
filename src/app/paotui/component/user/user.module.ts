@@ -5,7 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserComponent } from 'app/paotui/component/user/user.component';
 import { SharedModule } from 'app/shared/shared.module';
-import {PaotuiCommonModule} from "../../paotui.module";
+import {PaotuiCommonModule} from '../../paotui.module';
+import {ImageUploadModule} from 'angular2-image-upload';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,8 @@ import {PaotuiCommonModule} from "../../paotui.module";
         MatIconModule,
         MatMenuModule,
         SharedModule,
-        PaotuiCommonModule
+        PaotuiCommonModule,
+        ImageUploadModule
     ],
     exports     : [
         UserComponent
