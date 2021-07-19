@@ -9,10 +9,10 @@ docker cp default.http.conf my-nginx:/etc/nginx/conf.d/default.conf
 docker restart my-nginx
 
 # 将含前端网页的容器重新制作为镜像
-# a858e097bbe3
-docker commit a858e097bbe3  magicpowerworld/paotui_front_end:20210714
+# b52947add223
+docker commit b52947add223 magicpowerworld/paotui_front_end:20210718
 # 制作完镜像之后推送
-docker push magicpowerworld/paotui_front_end:20210714
+docker push magicpowerworld/paotui_front_end:20210718
 
 # 生产环境下部署镜像
 docker run --name paotui_front_end -p 443:443 -d magicpowerworld/paotui_front_end:20210710
